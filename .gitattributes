@@ -1,0 +1,2 @@
+# Keep native Windows batch line endings in GitHub downloads and ZIP archives.
+*.cmd -text whitespace=cr-at-eol

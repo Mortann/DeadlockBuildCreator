@@ -1,0 +1,15 @@
+node_modules/
+dist/
+*.tsbuildinfo
+test-results/
+playwright-report/
+.env
+.env.*
+!.env.example
+.cache/
+__pycache__/
+*.pyc
+
+.deadlock-installation.json
+.deadlock-installation.json.tmp
+.deadlock-update.lock

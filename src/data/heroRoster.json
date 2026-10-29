@@ -1,0 +1,394 @@
+{
+  "source": "https://api.deadlock-api.com/v1/assets/heroes?language=english",
+  "retrievedAt": "2026-10-29T13:23:23.869590+00:00",
+  "sourceSha256": "058e0cfadbc6da38b67e03381eb2ef22929403a9c13acad68d201c685e5693eb",
+  "heroes": [
+    {
+      "id": 1,
+      "name": "Infernus",
+      "className": "hero_inferno",
+      "portrait": "/assets/heroes/1.png"
+    },
+    {
+      "id": 2,
+      "name": "Seven",
+      "className": "hero_gigawatt",
+      "portrait": "/assets/heroes/2.png"
+    },
+    {
+      "id": 3,
+      "name": "Vindicta",
+      "className": "hero_hornet",
+      "portrait": "/assets/heroes/3.png"
+    },
+    {
+      "id": 4,
+      "name": "Lady Geist",
+      "className": "hero_ghost",
+      "portrait": "/assets/heroes/4.png"
+    },
+    {
+      "id": 6,
+      "name": "Abrams",
+      "className": "hero_atlas",
+      "portrait": "/assets/heroes/6.png"
+    },
+    {
+      "id": 7,
+      "name": "Wraith",
+      "className": "hero_wraith",
+      "portrait": "/assets/heroes/7.png"
+    },
+    {
+      "id": 8,
+      "name": "McGinnis",
+      "className": "hero_forge",
+      "portrait": "/assets/heroes/8.png"
+    },
+    {
+      "id": 10,
+      "name": "Paradox",
+      "className": "hero_chrono",
+      "portrait": "/assets/heroes/10.png"
+    },
+    {
+      "id": 11,
+      "name": "Dynamo",
+      "className": "hero_dynamo",
+      "portrait": "/assets/heroes/11.png"
+    },
+    {
+      "id": 12,
+      "name": "Kelvin",
+      "className": "hero_kelvin",
+      "portrait": "/assets/heroes/12.png"
+    },
+    {
+      "id": 13,
+      "name": "Haze",
+      "className": "hero_haze",
+      "portrait": "/assets/heroes/13.png"
+    },
+    {
+      "id": 14,
+      "name": "Holliday",
+      "className": "hero_astro",
+      "portrait": "/assets/heroes/14.png"
+    },
+    {
+      "id": 15,
+      "name": "Bebop",
+      "className": "hero_bebop",
+      "portrait": "/assets/heroes/15.png"
+    },
+    {
+      "id": 16,
+      "name": "Calico",
+      "className": "hero_nano",
+      "portrait": "/assets/heroes/16.png"
+    },
+    {
+      "id": 17,
+      "name": "Grey Talon",
+      "className": "hero_orion",
+      "portrait": "/assets/heroes/17.png"
+    },
+    {
+      "id": 18,
+      "name": "Mo & Krill",
+      "className": "hero_krill",
+      "portrait": "/assets/heroes/18.png"
+    },
+    {
+      "id": 19,
+      "name": "Shiv",
+      "className": "hero_shiv",
+      "portrait": "/assets/heroes/19.png"
+    },
+    {
+      "id": 20,
+      "name": "Ivy",
+      "className": "hero_tengu",
+      "portrait": "/assets/heroes/20.png"
+    },
+    {
+      "id": 21,
+      "name": "Kali",
+      "className": "hero_kali",
+      "portrait": "/assets/heroes/21.png"
+    },
+    {
+      "id": 25,
+      "name": "Warden",
+      "className": "hero_warden",
+      "portrait": "/assets/heroes/25.png"
+    },
+    {
+      "id": 27,
+      "name": "Yamato",
+      "className": "hero_yamato",
+      "portrait": "/assets/heroes/27.png"
+    },
+    {
+      "id": 31,
+      "name": "Lash",
+      "className": "hero_lash",
+      "portrait": "/assets/heroes/31.png"
+    },
+    {
+      "id": 35,
+      "name": "Viscous",
+      "className": "hero_viscous",
+      "portrait": "/assets/heroes/35.png"
+    },
+    {
+      "id": 38,
+      "name": "Gunslinger",
+      "className": "hero_gunslinger",
+      "portrait": "/assets/heroes/38.png"
+    },
+    {
+      "id": 39,
+      "name": "The Boss",
+      "className": "hero_yakuza",
+      "portrait": "/assets/heroes/39.png"
+    },
+    {
+      "id": 48,
+      "name": "Wrecker",
+      "className": "hero_wrecker",
+      "portrait": "/assets/heroes/48.png"
+    },
+    {
+      "id": 49,
+      "name": "Rutger",
+      "className": "hero_rutger",
+      "portrait": "/assets/heroes/49.png"
+    },
+    {
+      "id": 50,
+      "name": "Pocket",
+      "className": "hero_synth",
+      "portrait": "/assets/heroes/50.png"
+    },
+    {
+      "id": 51,
+      "name": "Thumper",
+      "className": "hero_thumper",
+      "portrait": "/assets/heroes/51.png"
+    },
+    {
+      "id": 52,
+      "name": "Mirage",
+      "className": "hero_mirage",
+      "portrait": "/assets/heroes/52.png"
+    },
+    {
+      "id": 53,
+      "name": "Fathom",
+      "className": "hero_slork",
+      "portrait": "/assets/heroes/53.png"
+    },
+    {
+      "id": 54,
+      "name": "Cadence",
+      "className": "hero_cadence",
+      "portrait": "/assets/heroes/54.png"
+    },
+    {
+      "id": 56,
+      "name": "Bomber",
+      "className": "hero_bomber"
+    },
+    {
+      "id": 57,
+      "name": "Shield Guy",
+      "className": "hero_shieldguy"
+    },
+    {
+      "id": 58,
+      "name": "Vyper",
+      "className": "hero_viper",
+      "portrait": "/assets/heroes/58.png"
+    },
+    {
+      "id": 59,
+      "name": "Vandal",
+      "className": "hero_vandal",
+      "portrait": "/assets/heroes/59.png"
+    },
+    {
+      "id": 60,
+      "name": "Sinclair",
+      "className": "hero_magician",
+      "portrait": "/assets/heroes/60.png"
+    },
+    {
+      "id": 61,
+      "name": "Trapper",
+      "className": "hero_trapper",
+      "portrait": "/assets/heroes/61.png"
+    },
+    {
+      "id": 62,
+      "name": "Raven",
+      "className": "hero_operative",
+      "portrait": "/assets/heroes/62.png"
+    },
+    {
+      "id": 63,
+      "name": "Mina",
+      "className": "hero_vampirebat",
+      "portrait": "/assets/heroes/63.png"
+    },
+    {
+      "id": 64,
+      "name": "Drifter",
+      "className": "hero_drifter",
+      "portrait": "/assets/heroes/64.png"
+    },
+    {
+      "id": 65,
+      "name": "Venator",
+      "className": "hero_priest",
+      "portrait": "/assets/heroes/65.png"
+    },
+    {
+      "id": 66,
+      "name": "Victor",
+      "className": "hero_frank",
+      "portrait": "/assets/heroes/66.png"
+    },
+    {
+      "id": 67,
+      "name": "Paige",
+      "className": "hero_bookworm",
+      "portrait": "/assets/heroes/67.png"
+    },
+    {
+      "id": 68,
+      "name": "Boho",
+      "className": "hero_boho",
+      "portrait": "/assets/heroes/68.png"
+    },
+    {
+      "id": 69,
+      "name": "The Doorman",
+      "className": "hero_doorman",
+      "portrait": "/assets/heroes/69.png"
+    },
+    {
+      "id": 70,
+      "name": "Skyrunner",
+      "className": "hero_skyrunner",
+      "portrait": "/assets/heroes/70.png"
+    },
+    {
+      "id": 71,
+      "name": "Swan",
+      "className": "hero_swan",
+      "portrait": "/assets/heroes/71.png"
+    },
+    {
+      "id": 72,
+      "name": "Billy",
+      "className": "hero_punkgoat",
+      "portrait": "/assets/heroes/72.png"
+    },
+    {
+      "id": 73,
+      "name": "Druid",
+      "className": "hero_druid",
+      "portrait": "/assets/heroes/73.png"
+    },
+    {
+      "id": 74,
+      "name": "Graf",
+      "className": "hero_graf",
+      "portrait": "/assets/heroes/74.png"
+    },
+    {
+      "id": 75,
+      "name": "Fortuna",
+      "className": "hero_fortuna",
+      "portrait": "/assets/heroes/75.png"
+    },
+    {
+      "id": 76,
+      "name": "Graves",
+      "className": "hero_necro",
+      "portrait": "/assets/heroes/76.png"
+    },
+    {
+      "id": 77,
+      "name": "Apollo",
+      "className": "hero_fencer",
+      "portrait": "/assets/heroes/77.png"
+    },
+    {
+      "id": 78,
+      "name": "Deadman Danny",
+      "className": "hero_deadpack",
+      "portrait": "/assets/heroes/78.png"
+    },
+    {
+      "id": 79,
+      "name": "Rem",
+      "className": "hero_familiar",
+      "portrait": "/assets/heroes/79.png"
+    },
+    {
+      "id": 80,
+      "name": "Silver",
+      "className": "hero_werewolf",
+      "portrait": "/assets/heroes/80.png"
+    },
+    {
+      "id": 81,
+      "name": "Celeste",
+      "className": "hero_unicorn",
+      "portrait": "/assets/heroes/81.png"
+    },
+    {
+      "id": 82,
+      "name": "Opera",
+      "className": "hero_opera"
+    },
+    {
+      "id": 83,
+      "name": "hero_testhero",
+      "className": "hero_testhero",
+      "portrait": "/assets/heroes/83.png"
+    },
+    {
+      "id": 84,
+      "name": "Rat King",
+      "className": "hero_ratking",
+      "portrait": "/assets/heroes/84.png"
+    },
+    {
+      "id": 85,
+      "name": "Solomon",
+      "className": "hero_chessmaster",
+      "portrait": "/assets/heroes/85.png"
+    },
+    {
+      "id": 86,
+      "name": "Violet",
+      "className": "hero_artist",
+      "portrait": "/assets/heroes/86.png"
+    },
+    {
+      "id": 87,
+      "name": "Nurse Harrow",
+      "className": "hero_nurse",
+      "portrait": "/assets/heroes/87.png"
+    },
+    {
+      "id": 88,
+      "name": "Baba",
+      "className": "hero_baba",
+      "portrait": "/assets/heroes/88.png"
+    }
+  ]
+}

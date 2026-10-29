@@ -1,0 +1,626 @@
+{
+  "upgrade_clip_size": {
+    "nameFr": "Chargeur XL",
+    "description": ""
+  },
+  "upgrade_non_player_bonus": {
+    "nameFr": "Balles antimonstres",
+    "description": ""
+  },
+  "upgrade_non_player_bonus_sacrifice": {
+    "nameFr": "Sacrifice rituel",
+    "description": "Vous ciblez un PNJ hostile et le drainez pour obtenir 170 % d'âmes bonus et un bonus puissant de longue durée."
+  },
+  "upgrade_chain_lightning": {
+    "nameFr": "Balles teslas",
+    "description": "Vos balles ont une chance d'électriser la cible. Le choc électrique rebondira sur une unité ennemie à proximité."
+  },
+  "upgrade_capacitor": {
+    "nameFr": "Condensateur",
+    "description": "Lance un projectile qui inflige des dégâts, applique un ralentissement puissant qui s'amenuise au fil du temps, empêche l'adversaire de puiser dans son endurance et réduit au silence ses objets et capacités de déplacemen"
+  },
+  "upgrade_hollow_point_rounds": {
+    "nameFr": "Pointe creuse",
+    "description": "Lorsque votre seuil de PV dépasse 65 %, vous infligez des dégâts des armes supplémentaires et vos balles réduisent la résistance aux balles de la cible."
+  },
+  "upgrade_pristine_emblem": {
+    "nameFr": "Balles ouvrantes",
+    "description": "Vos attaques appliquent des dégâts des armes supplémentaires contre les adversaires avec plus de 50 % de PV."
+  },
+  "upgrade_high_velocity_mag": {
+    "nameFr": "Balles véloces",
+    "description": ""
+  },
+  "upgrade_lifestrike_gauntlets": {
+    "nameFr": "Gantelets vampiriques",
+    "description": "Votre prochaine attaque de mêlée vous soigne. Le soin est de 30 % contre les unités non-occultistes. Le temps de récupération est multiplié par 1.5 pour les attaques de mêlée légères."
+  },
+  "upgrade_melee_rebuttal": {
+    "nameFr": "Réfutation",
+    "description": "En cas de parade réussie contre une unité occultiste ennemie, vous gagnez des PV d'un montant des dégâts parés et renvoyez ces derniers à la cible. Accorde un bonus temporaire de dégâts."
+  },
+  "upgrade_counterspell": {
+    "nameFr": "Contresort",
+    "description": "Votre prochaine parade vous protège des dégâts et des effets d'objets et de capacités adverses. En cas de parade de sort réussie, vous obtenez des soins, de la vitesse de déplacement et du Pouvoir spirituel."
+  },
+  "upgrade_weighted_shots": {
+    "nameFr": "Tirs lestés",
+    "description": "Vos balles provoquent un ralentissement croissant sur les cibles."
+  },
+  "upgrade_close_range": {
+    "nameFr": "Tir rapproché",
+    "description": "Augmente vos dégâts des armes quand vous attaquez une cible à courte portée."
+  },
+  "upgrade_long_range": {
+    "nameFr": "Longue portée",
+    "description": "Vous infligez des dégâts des armes bonus quand vous attaquez une cible au-delà de la distance minimale."
+  },
+  "upgrade_slowing_bullets": {
+    "nameFr": "Balles ralentissantes",
+    "description": "Vos balles ralentissent les cibles."
+  },
+  "upgrade_inhibitor": {
+    "nameFr": "Inhibiteur",
+    "description": "Vos balles s'accumulent pour réduire les dégâts infligés par la cible et appliquent une réduction des soins."
+  },
+  "upgrade_tech_defense_shredders": {
+    "nameFr": "Balles anti-esprit",
+    "description": "Vos balles appliquent un effet négatif qui réduit la résistance spirituelle de la cible et vous confère à vous et votre équipe du vol de vie spirituel contre cette cible."
+  },
+  "upgrade_dps_aura": {
+    "nameFr": "Aura héroïque",
+    "description": "Augmente la résistance aux balles des unités alliées à proximité."
+  },
+  "upgrade_targeted_silence": {
+    "nameFr": "Onde de silence",
+    "description": "Lance un projectile qui se déploie devant vous, et qui réduit au silence les adversaires pendant une courte durée et leur inflige des dégâts d'impact.Le silence n'interrompt pas la canalisation des capacités."
+  },
+  "upgrade_proc_silence": {
+    "nameFr": "Sourdine",
+    "description": "Vos balles finissent par réduire leurs cibles au silence. À l'expiration de l'effet, les cibles y sont immunisées pendant 10 s."
+  },
+  "upgrade_berserker": {
+    "nameFr": "Furie",
+    "description": "Augmente vos dégâts des armes à mesure que vous subissez des dégâts répétés."
+  },
+  "upgrade_fervor": {
+    "nameFr": "Frénésie",
+    "description": "Augmente vos statistiques quand vous avez moins de 50 % de vos PV et les effets négatifs sont réduits."
+  },
+  "upgrade_siphon_bullets": {
+    "nameFr": "Balles drainantes",
+    "description": "Vos balles volent temporairement les PV max. de vos adversaires. Les unités ennemies récupèrent leurs PV à la fin de l'effet négatif."
+  },
+  "upgrade_headshot_booster": {
+    "nameFr": "Explose-tête",
+    "description": "Votre prochain tir à la tête contre une unité occultiste ennemie inflige des dégâts des armes bonus."
+  },
+  "upgrade_headshot_booster2": {
+    "nameFr": "Tirs entêtants",
+    "description": "En cas de tir à la tête sur une cible, réduit sa résistance aux balles."
+  },
+  "upgrade_sharpshooter": {
+    "nameFr": "Tir d'élite",
+    "description": "Vous infligez des dégâts des armes bonus quand vous attaquez une cible au-delà de la distance minimale."
+  },
+  "upgrade_headhunter": {
+    "nameFr": "Chasseur de têtes",
+    "description": "Votre prochain tir à la tête sur une unité occultiste ennemie inflige des dégâts des armes bonus, vous confère des soins ainsi que de la bonus move speed temporaire."
+  },
+  "upgrade_spellslinger_headshots": {
+    "nameFr": "Entaille spirituelle",
+    "description": ""
+  },
+  "upgrade_banshee_slugs": {
+    "nameFr": "Brise-tête",
+    "description": "Vos tirs en pleine tête réduisent leur résistance aux balles, leur résistance spirituelle et les soins reçus."
+  },
+  "upgrade_crackshot": {
+    "nameFr": "Tir mystique",
+    "description": "Votre prochaine balle infligera des dégâts spirituels en plus."
+  },
+  "upgrade_critshot": {
+    "nameFr": "Tir veinard",
+    "description": "Vos balles ont une chance d'être surpuissantes et de provoquer des dégâts des armes bonus quand elles touchent leur cible.Les dégâts bonus ne peuvent pas être critiques."
+  },
+  "upgrade_close_quarter_combat": {
+    "nameFr": "À bout portant",
+    "description": "Quand vous tirez sur votre cible à bout portant, vous infligez des dégâts des armes bonus et vos balles appliquent un ralentissement."
+  },
+  "upgrade_toxic_bullets": {
+    "nameFr": "Balles toxiques",
+    "description": "Vos balles provoquent un saignement cumulable sur les unités ennemies touchées. Elles perdent un pourcentage de leurs PV max. au fil du temps. Diminue également les soins reçus par les cibles qui saignent."
+  },
+  "upgrade_ricochet": {
+    "nameFr": "Ricochet",
+    "description": "Vos balles ricochent sur les unités ennemies proches de votre cible : elles appliquent les modificateurs de balles et infligent un pourcentage des dégâts originaux."
+  },
+  "upgrade_health": {
+    "nameFr": "Surplus de PV",
+    "description": ""
+  },
+  "upgrade_vampire": {
+    "nameFr": "Balles vampiriques",
+    "description": ""
+  },
+  "upgrade_debuff_reducer": {
+    "nameFr": "Atténuateur d'effets négatifs",
+    "description": "Réduit la durée de tous les effets négatifs reçus."
+  },
+  "upgrade_reduce_debuff_duration": {
+    "nameFr": "Dissipateur de magie",
+    "description": "Supprime tous les effets négatifs non ultimes qui vous affectent. Lors d'une suppression, vous récupérez des PV et obtenez un bonus de vitesse de déplacement. N'est pas utilisable en cas d'étourdissement ou d'endormissem"
+  },
+  "upgrade_tech_purge": {
+    "nameFr": "Résilience spirituelle",
+    "description": "Quand vous avez moins de 50 % de vos PV, vous gagnez en résistance spirituelle."
+  },
+  "upgrade_improved_bullet_armor": {
+    "nameFr": "Résilience balistique",
+    "description": "Quand vous avez moins de 50 % de vos PV, vous gagnez en résistance aux balles."
+  },
+  "upgrade_metal_skin": {
+    "nameFr": "Cuir blindé",
+    "description": "Immunise contre les balles."
+  },
+  "upgrade_healing_booster": {
+    "nameFr": "Amplisoins",
+    "description": "Améliore l'efficacité de vos soins."
+  },
+  "upgrade_chonky": {
+    "nameFr": "Fortitude",
+    "description": "Accorde de la régénération de PV si aucun dégât n'a été subi pendant un certain temps."
+  },
+  "upgrade_damage_recycler": {
+    "nameFr": "Sangsue",
+    "description": "Réduit les effets de réduction de soins appliqués par les unités ennemies."
+  },
+  "upgrade_sprint_booster": {
+    "nameFr": "Bottes de course",
+    "description": ""
+  },
+  "upgrade_trophy_collector": {
+    "nameFr": "Trophée de chasse",
+    "description": "Whenever you score an assist or kill, gain extra sprint, ability range and passive soul generation. This effect stacks and persists through death."
+  },
+  "upgrade_cardio_calibrator": {
+    "nameFr": "Vitesse persistante",
+    "description": "Réduit les pénalités de vitesse de déplacement appliquées par vos adversaires."
+  },
+  "upgrade_superior_stamina": {
+    "nameFr": "Maitrise d'endurance",
+    "description": "Permet d'effectuer un second saut élancé ou élan propulsé avant l'atterrissage."
+  },
+  "upgrade_rapid_rounds": {
+    "nameFr": "Cadence infernale",
+    "description": ""
+  },
+  "upgrade_improved_stamina": {
+    "nameFr": "Surplus d'endurance",
+    "description": ""
+  },
+  "upgrade_bullet_armor_reduction_aura": {
+    "nameFr": "Aura prédatrice",
+    "description": "Réduit la résistance aux balles et la cadence de tir des unités ennemies proches. S'il n'y a qu'une unité occultiste ennemie à proximité, l'effet est doublé."
+  },
+  "upgrade_grit": {
+    "nameFr": "Ténacité",
+    "description": "Accorde une protection pendant une courte durée."
+  },
+  "upgrade_weapon_shielding": {
+    "nameFr": "Bouclier balistique",
+    "description": "Vous accorde une protection en cas de dégâts des armes considérables infligés par des occultistes adverses dans un court laps de temps."
+  },
+  "upgrade_spirit_bubble": {
+    "nameFr": "Bouclier spirituel",
+    "description": "Vous accorde une protection en cas de dégâts spirituels considérables infligés par des occultistes adverses dans un court laps de temps."
+  },
+  "upgrade_regenerating_bullet_shield": {
+    "nameFr": "Veste de combat",
+    "description": "Quand vos PV sont supérieurs à 65 %, vous infligez plus de dégâts des armes et gagnez en bonus de cadence de tir."
+  },
+  "upgrade_magic_shield": {
+    "nameFr": "Emblème enchanteur",
+    "description": "Quand vos PV sont supérieurs à 65 %, vous obtenez un bonus de Pouvoir spirituel et de réduction des temps de récupération."
+  },
+  "upgrade_improved_spirit": {
+    "nameFr": "Surplus spirituel",
+    "description": ""
+  },
+  "upgrade_mystic_regeneration": {
+    "nameFr": "Régénération mystique",
+    "description": "Quand vous infligez des dégâts spirituels aux occultistes adverses, vous obtenez de la régénération de plus. Les charges se cumulent quand vous infligez des dégâts à des unités occultistes différentes."
+  },
+  "upgrade_soaring_spirit": {
+    "nameFr": "Esprit amélioré",
+    "description": ""
+  },
+  "upgrade_tech_overflow": {
+    "nameFr": "Saturation spirituelle",
+    "description": "Augmente votre cadence de tir, votre pouvoir spirituel et votre vol de vie spirituel. L'effet gagne en puissance à mesure que vous tirez sur des occultistes."
+  },
+  "upgrade_return_fire": {
+    "nameFr": "Retour de balle",
+    "description": "Tire une balle automatiquement vers l'unité ennemie qui vous a infligé des dégâts avec ses capacités ou son arme."
+  },
+  "upgrade_tech_range": {
+    "nameFr": "Expansion supérieure",
+    "description": "Augmente la portée et le rayon d'effet de vos capacités et objets."
+  },
+  "upgrade_magic_reach": {
+    "nameFr": "Expansion mystique",
+    "description": "Imprègne une capacité pour augmenter sa portée et son rayon d'effet."
+  },
+  "upgrade_extra_charge": {
+    "nameFr": "Surplus de charge",
+    "description": ""
+  },
+  "upgrade_health_stealing_magic": {
+    "nameFr": "Vol de vie spirituel",
+    "description": ""
+  },
+  "upgrade_bullet_resist_shredder": {
+    "nameFr": "Balles perforantes",
+    "description": "Réduit la résistance aux balles sur les unités ennemies lorsque vous infligez des dégâts spirituels."
+  },
+  "upgrade_mystic_reverb": {
+    "nameFr": "Réverbération mystique",
+    "description": ""
+  },
+  "upgrade_magic_burst": {
+    "nameFr": "Choc mystique",
+    "description": "Accumule des dégâts spirituels bonus au fil du temps. Ainsi, les capacités qui font plus de 80 de dégâts infligent des dégâts supplémentaires."
+  },
+  "upgrade_magic_shock": {
+    "nameFr": "Antichar",
+    "description": "Accumule des dégâts spirituels bonus au fil du temps. Ainsi, les capacités qui font plus de 165 de dégâts infligent des dégâts supplémentaires. Outrepasse la résistance spirituelle."
+  },
+  "upgrade_magic_vulnerability": {
+    "nameFr": "Vulnérabilité mystique",
+    "description": "Quand une unité ennemie subit des dégâts spirituels, sa résistance spirituelle est réduite."
+  },
+  "upgrade_healbane": {
+    "nameFr": "Châtiment curatif",
+    "description": "Vos dégâts spirituels réduisent les soins reçus par l'adversaire. Si une unité occultiste ennemie meurt sous son effet, vous recevrez des soins importants."
+  },
+  "upgrade_magic_slow": {
+    "nameFr": "Ralentissement mystique",
+    "description": "Lorsque la cible subit des dégâts spirituels, sa vitesse de déplacement est réduite."
+  },
+  "upgrade_escalating_exposure": {
+    "nameFr": "Exposition spirituelle",
+    "description": "Les dégâts spirituels infligés appliquent de l'amplification spirituelle cumulable qui augmente vos dégâts spirituels contre la cible."
+  },
+  "upgrade_rapid_recharge": {
+    "nameFr": "Recharge rapide",
+    "description": ""
+  },
+  "upgrade_magic_tempo": {
+    "nameFr": "Récupération comprimée",
+    "description": "Imprègne une capacité pour réduire son temps de récupération."
+  },
+  "upgrade_cooldown_reduction": {
+    "nameFr": "Récupération supérieure",
+    "description": "Réduit les temps de récupération de vos capacités."
+  },
+  "upgrade_transcendent_cooldown": {
+    "nameFr": "Récupération transcendante",
+    "description": "Réduit les temps de récupération de vos capacités et objets."
+  },
+  "upgrade_containment": {
+    "nameFr": "Malédiction de ralentissement",
+    "description": "Ralentit les déplacements d'une cible ennemie et réduit au silence ses objets et capacités de mobilité.Augmente la gravité de la cible.N'a pas d'effet sur l'endurance de la cible."
+  },
+  "upgrade_spirit_sap": {
+    "nameFr": "Sape spirituelle",
+    "description": "Ciblez une unité ennemie pour réduire sa résistance spirituelle et son pouvoir spirituel."
+  },
+  "upgrade_focus_lens": {
+    "nameFr": "Lentille focale",
+    "description": "Ciblez une unité ennemie pour la réduire au silence. Une partie de tous les dégâts infligés pendant le silence est appliquée à la cible après dissipation de l'effet."
+  },
+  "upgrade_withering_whip": {
+    "nameFr": "Canon rouillé",
+    "description": "Ciblez une unité ennemie pour réduire sa cadence de tir et sa résistance aux balles."
+  },
+  "upgrade_greater_withering_whip": {
+    "nameFr": "Malédiction désarmante",
+    "description": "Désarme une cible ennemie et réduit sa résistance aux balles."
+  },
+  "upgrade_rescue_beam": {
+    "nameFr": "Faisceau de détresse",
+    "description": "Soigne une cible occultiste alliée et vous-même d'un pourcentage des PV max. Pendant les soins, vous pouvez tirer la cible vers vous une fois. Autociblage possible."
+  },
+  "upgrade_rupture": {
+    "nameFr": "Décomposition",
+    "description": "Inflige des dégâts sur la durée. Les dégâts dépendent des PV actuels de la cible.Les dégâts de Décomposition ne sont pas mortels et ne déclenchent pas les effets d'objets."
+  },
+  "upgrade_discord": {
+    "nameFr": "Fléau",
+    "description": "Applique de la résistance spirituelle et de la résistance aux effets négatifs ainsi qu'une aura sur une cible alliée qui inflige des dégâts à ses adversaires proportionnels à leurs PV max. Les effets négatifs existants s"
+  },
+  "upgrade_target_stun": {
+    "nameFr": "Coup d'enclume",
+    "description": "Applique un étourdissement après 2 s. Sa durée est augmentée contre les cibles dans les airs.Augmente la gravité de la cible pendant la durée de l'étourdissement."
+  },
+  "upgrade_phantom_strike": {
+    "nameFr": "Frappe spectrale",
+    "description": "Téléportez-vous sur une unité ennemie et faites-la tomber. La cible subit des dégâts, est ralentie et désarmée."
+  },
+  "upgrade_warp_stone": {
+    "nameFr": "Pierre de distorsion",
+    "description": "Vous téléporte droit devant et augmente votre résistance aux balles."
+  },
+  "upgrade_aoe_root": {
+    "nameFr": "Toile tourbillonnante",
+    "description": "Lance une grenade aspirante qui attire les unités ennemies dans une petite zone, et leur applique une malédiction de ralentissement. L'utilisation secondaire permet de cibler une unité directement."
+  },
+  "upgrade_ability_refresher": {
+    "nameFr": "Rembobineur",
+    "description": "Réinitialise les temps de récupération de toutes vos capacités et restaure toutes vos charges."
+  },
+  "upgrade_ability_power_shard": {
+    "nameFr": "Éclat d'écho",
+    "description": "Réinitialise le temps de récupération de la capacité imprégnée non ultime.Le temps de récupération de cet objet augmente en fonction du temps de récupération de la capacité imprégnée."
+  },
+  "upgrade_tech_damage_pulse": {
+    "nameFr": "Onde de tourment",
+    "description": "Inflige périodiquement des dégâts spirituels aux deux unités adverses les plus proches."
+  },
+  "upgrade_cheat_death": {
+    "nameFr": "Trompe-la-mort",
+    "description": ""
+  },
+  "upgrade_cloaking_device_active": {
+    "nameFr": "Tissu d'ombres",
+    "description": "Vous devenez invisible. Quand vous subissez des dégâts pendant l'effet, votre position est brièvement révélée."
+  },
+  "upgrade_rocket_booster": {
+    "nameFr": "Bond majestueux",
+    "description": "Élancez-vous haut dans les airs et activez une protection. De là-haut, vous pouvez réactiver l'objet pour descendre plus rapidement.Ne peut pas être utilisé pendant 5 s si une unité occultiste adverse vous attaque."
+  },
+  "upgrade_health_nova": {
+    "nameFr": "Nova curative",
+    "description": "Vous soigne ainsi que les unités alliées proches."
+  },
+  "upgrade_restorative_locket": {
+    "nameFr": "Médaillon de soin",
+    "description": "Quand une unité adverse utilise une capacité à moins de 32m m de vous, vous accumulez une charge de restauration. La consommation de toutes les charges vous soigne et restaurera 3 points d'endurance selon le nombre de ch"
+  },
+  "upgrade_health_stimpak": {
+    "nameFr": "Rite de guérison",
+    "description": "Régénère les PV et augmente la vitesse de course de la cible. L'effet est dissipé si la cible subit des dégâts d'occultistes ou d'objectifs adverses. Autociblage possible."
+  },
+  "upgrade_infuser": {
+    "nameFr": "Second souffle",
+    "description": "Vous confère du vol de vie spirituel et du pouvoir spirituel."
+  },
+  "upgrade_guardian_ward": {
+    "nameFr": "Sentinelle gardienne",
+    "description": "Confère à la cible une protection et de la vitesse de déplacement temporaire. Peut être utilisée sur l'unité incantatrice.Le temps de récupération est réduit de moitié en cas de lancement sur une autre unité."
+  },
+  "upgrade_divine_barrier": {
+    "nameFr": "Protection divine",
+    "description": "Annule tous les effets négatifs (sauf les étourdissements) appliqués à une cible et lui accorde une protection et de la vitesse de déplacement. Peut être utilisée sur soi-même. Le temps de récupération est réduit de moit"
+  },
+  "upgrade_thermal_detonator": {
+    "nameFr": "Pyroalchimie",
+    "description": "Jette une flasque qui explose à l'impact et crée une zone où les dégâts spirituels par seconde augmente et où la résistance aux balles des adversaires diminue.50 % moins efficace contre les unités non occultistes."
+  },
+  "upgrade_blood_tribute": {
+    "nameFr": "Offrande sanglante",
+    "description": "Activer/désactiver : vous sacrifiez continuellement vos PV pour améliorer votre cadence de tir, votre résistance aux effets négatifs et votre vitesse de déplacement."
+  },
+  "upgrade_fleetfoot_boots": {
+    "nameFr": "Pied plume",
+    "description": "Augmente votre vitesse de déplacement et votre résistance aux ralentissements."
+  },
+  "upgrade_kinetic_sash": {
+    "nameFr": "Élan cinétique",
+    "description": "L'élan propulseur augmentera votre cadence de tir et la taille de votre chargeur jusqu'au rechargement suivant. L'effet dure jusqu'à 7 secondes."
+  },
+  "upgrade_arcane_surge": {
+    "nameFr": "Poussée d'arcane",
+    "description": "Après avoir effectué un élan propulseur, la prochaine capacité que vous lancerez dans les 7 s qui suivent bénéficiera d'un bonus de portée, de durée et de pouvoir spirituel."
+  },
+  "upgrade_unstoppable": {
+    "nameFr": "Intouchable",
+    "description": "Supprime temporairement les effets de statut négatifs et confère l'immunité contre les étourdissements, réductions au silence, endormissements, enracinements et désarmements. Ne peut pas être utilisée pendant un étourdis"
+  },
+  "upgrade_colossus": {
+    "nameFr": "Colosse",
+    "description": "Vous grandissez et obtenez de la résistance aux balles, de la résistance spirituelle et des dégâts de mêlée. Les unités ennemies à proximité subissent un ralentissement et leur vitesse d'élan est réduite."
+  },
+  "upgrade_cold_front": {
+    "nameFr": "Souffle glacial",
+    "description": "Libère une explosion de glace qui s'étend et inflige des dégâts spirituels et ralentit les cibles à l'impact."
+  },
+  "upgrade_arctic_blast": {
+    "nameFr": "Explosion arctique",
+    "description": "Libère une explosion de glace qui s'étend et inflige des dégâts spirituels, congèle, puis ralentit la cible touchée.Les cibles ralenties voient leur régénération d'endurance gelée."
+  },
+  "upgrade_self_bubble": {
+    "nameFr": "Refuge céleste",
+    "description": "Entrez instantanément dans un état de vide et devenez invulnérable pendant une courte durée."
+  },
+  "upgrade_glitch": {
+    "nameFr": "Relique maudite",
+    "description": "Maudit une cible adverse. Elle est interrompue, réduite au silence, désarmée et elle ne peut pas utiliser ses objets. Supprime tous les effets positifs autres que ceux accordés par les capacités ultimes.Vous infligez moi"
+  },
+  "upgrade_arcane_extension": {
+    "nameFr": "Prolongation",
+    "description": "Imprègne une capacité pour prolonger sa durée."
+  },
+  "upgrade_imbued_duration_extender": {
+    "nameFr": "Prolongation supérieure",
+    "description": "Prolonge les effets de vos capacités et objets."
+  },
+  "upgrade_glass_cannon": {
+    "nameFr": "Canon de verre",
+    "description": "Chaque victime vous confère une charge permanente de cadence de tir (jusqu'à 8 charges cumulables). La mort entraine la perte d'une charge."
+  },
+  "upgrade_fury_trance": {
+    "nameFr": "Transe furieuse",
+    "description": "Accorde de la cadence de tir, de la résistance spirituelle et de la vitesse de déplacement. Supprime la pénalité de vitesse de déplacement lors des tirs, mais vous réduit au silence et empêche l'utilisation et la régénér"
+  },
+  "upgrade_surging_power": {
+    "nameFr": "Pulsion vampirique",
+    "description": "Confère le vol de vie, une augmentation de la cadence de tir et des munitions. Ces dernières ne sont pas limitées par la taille max. de votre chargeur."
+  },
+  "upgrade_boxing_glove": {
+    "nameFr": "Frappe fortifiante",
+    "description": "Votre attaque de mêlée applique un ralentissement et vous soigne d'un pourcentage des dégâts de mêlée infligés plus un montant fixe. Soigne à hauteur de 40 % pour les dégâts infligés aux non-occultistes. Le temps de récu"
+  },
+  "upgrade_acolytes_glove": {
+    "nameFr": "Frappe spirituelle",
+    "description": "Vos attaques de mêlée légère ou lourde infligent des dégâts spirituels supplémentaires aux occultistes et réduisent leur résistance spirituelle. Le temps de récupération est multiplié par 2 pour les attaques de mêlée lég"
+  },
+  "upgrade_spirit_snatch": {
+    "nameFr": "Razzia spirituelle",
+    "description": "Vos attaques de mêlée légère ou lourde infligent des dégâts spirituels supplémentaires aux occultistes et volent de la résistance spirituelle et du pouvoir spirituel.Les effets sont réduits de 30 % pour les attaques de m"
+  },
+  "upgrade_melee_charge": {
+    "nameFr": "Charge brute",
+    "description": "Votre prochaine attaque de mêlée lourde inflige des dégâts supplémentaires."
+  },
+  "upgrade_crushing_fists": {
+    "nameFr": "Poings écrasants",
+    "description": "Vos dégâts de mêlée rechargent vos munitions et appliquent un effet négatif cumulable sur la résistance aux balles des adversaires. Les attaques de mêlée lourde appliquent 2 charges. En cas de charges max., la cible est "
+  },
+  "upgrade_diviners_kevlar": {
+    "nameFr": "Kevlar de l'augure",
+    "description": "Lorsque vous lancez une capacité ultime, vous obtenez un bouclier et, temporairement, du pouvoir spirituel."
+  },
+  "upgrade_resonant_healing": {
+    "nameFr": "Régénération radieuse",
+    "description": "Soigne et accorde un bonus de vitesse de déplacement pendant un court lorsque vous lancez une capacité."
+  },
+  "upgrade_boundless_spirit": {
+    "nameFr": "Profusion spirituelle",
+    "description": ""
+  },
+  "upgrade_burst_fire": {
+    "nameFr": "Rafale",
+    "description": "Votre cadence de tir et votre vitesse de déplacement sont brièvement améliorées lorsqu'une de vos balles touche une unité occultiste."
+  },
+  "upgrade_endurance": {
+    "nameFr": "Surplus de régénération",
+    "description": ""
+  },
+  "upgrade_magic_storm": {
+    "nameFr": "Regain de puissance",
+    "description": "Imprègne une capacité de pouvoir spirituel permanent. Quand celle-ci est utilisée, vous obtenez un bonus de vitesse de déplacement qui continue même lorsque vous attaquez."
+  },
+  "upgrade_suppressor": {
+    "nameFr": "Sabotage",
+    "description": "Lorsque vous infligez des dégâts spirituels aux unités ennemies, vous réduisez également leur cadence de tir."
+  },
+  "upgrade_quick_silver": {
+    "nameFr": "Rechargement éclair",
+    "description": "Votre capacité imprégnée gagne en puissance au fil du temps. Elle inflige des dégâts spirituels bonus, bénéficie d'un bonus de cadence de tir, et recharge votre arme à son lancement."
+  },
+  "upgrade_ethereal_bullets": {
+    "nameFr": "Magnum mercuriel",
+    "description": "Votre capacité imprégnée accumule des dégâts spirituels bonus ainsi qu'un bonus de cadence de tir au fil du temps, et vous rechargez votre arme lorsque vous utilisez la capacité. Jusqu'au prochain rechargement, vos balle"
+  },
+  "upgrade_intensifying_clip": {
+    "nameFr": "Chargeur exponentiel",
+    "description": "Augmente vos dégâts des armes lorsque vous tirez sans interruption."
+  },
+  "upgrade_reinforcing_casings": {
+    "nameFr": "Défense renforcée",
+    "description": "Accorde de la résistance aux balles quand vos balles touchent une unité occultiste. Chaque tir ne peut accorder qu'une charge."
+  },
+  "upgrade_blitz_bullets": {
+    "nameFr": "Tir véloce",
+    "description": ""
+  },
+  "upgrade_veil_walker": {
+    "nameFr": "Sentinelle du voile",
+    "description": "Traverser un voile cosmique vous rend invisible, vous soigne et augmente votre vitesse de déplacement."
+  },
+  "upgrade_vex_barrier": {
+    "nameFr": "Protection d'urgence",
+    "description": "Vous accorde une protection lorsque vous êtes la cible d'un étourdissement, d'une prise au piège, d'une immobilisation, d'un endormissement ou d'une réduction au silence."
+  },
+  "upgrade_auto_cleanse": {
+    "nameFr": "Indomptable",
+    "description": ""
+  },
+  "upgrade_medic_bullets": {
+    "nameFr": "Tir curatif",
+    "description": "Votre prochain tir vous soigne en fonction de la cible touchée."
+  },
+  "upgrade_titan_round": {
+    "nameFr": "Chargeur titanesque",
+    "description": ""
+  },
+  "upgrade_split_shot": {
+    "nameFr": "Tir divisé",
+    "description": "Confère à votre arme des tirs multiples. Si vous touchez plus d'une unité occultiste par attaque, vous obtenez un bonus de dégâts des armes cumulable. Chaque cible ne peut être touchée qu'une fois par tir multiple."
+  },
+  "upgrade_active_reload": {
+    "nameFr": "Recharge manuelle",
+    "description": "Pendant le rechargement, appuyez sur Recharger pendant la phase de surbrillance pour terminer le rechargement instantanément et obtenir de la cadence de tir, des balles voleuses de vie et de la vitesse de déplacement."
+  },
+  "upgrade_magic_carpet": {
+    "nameFr": "Tapis volant",
+    "description": "Invoque un tapis volant qui vous emporte dans les airs. Pendant le vol, vous outrepassez les effets de ralentissement. Le tapis disparaitra si vous effectuez une action.Impossible de lancer une capacité lorsque le tapis "
+  },
+  "upgrade_spirit_burn": {
+    "nameFr": "Brulure spirituelle",
+    "description": "L'infliction de dégâts spirituels considérables sur une cible ennemie à moins de 5 s d'intervalle provoque une explosion qui la blesse et la brule davantage. Elle subit des dégâts au fil du temps et reçoit moins de soins"
+  },
+  "upgrade_ultimate_burst": {
+    "nameFr": "Parchemin de foudre",
+    "description": "Les dégâts de votre capacité ultime appliquent un étourdissement et infligent des dégâts spirituels bonus après un bref délai."
+  },
+  "upgrade_absorbing_armor": {
+    "nameFr": "Cuirasse ensorcelée",
+    "description": "Quand vous recevez des dégâts spirituels importants, le temps de récupération d'une de vos capacités choisie aléatoirement est réduit."
+  },
+  "upgrade_healbuff": {
+    "nameFr": "Tempo curatif",
+    "description": "L'application de soins sur vous ou une unité alliée donne à la cible un bonus de cadence de tir et de la bonus move speed.Ne s'applique pas à la régénération innée, ni au vol passif spirituel ou de balles."
+  },
+  "upgrade_aprounds": {
+    "nameFr": "Perce armure",
+    "description": "Vos balles ont une chance de toujours toucher leur cible, transperçant les unités ennemies et ignorant leur résistance aux balles."
+  },
+  "upgrade_deflecting_armor": {
+    "nameFr": "Armure de plates",
+    "description": "Accorde une chance de dévier les balles qui arrivent sur vous en empêchant tous les dégâts des armes ou tous les effets à l'impact des balles."
+  },
+  "upgrade_spellbreaker": {
+    "nameFr": "Brise-magie",
+    "description": "Les prochains dégâts spirituels importants que vous subirez seront considérablement réduits."
+  },
+  "upgrade_juggernaut": {
+    "nameFr": "Implacable",
+    "description": ""
+  },
+  "upgrade_enchanted_holsters": {
+    "nameFr": "Fronde magique",
+    "description": "À chaque fois que vous lancez une capacité ou un objet pendant un combat, vous obtenez un bonus cumulable qui améliore la cadence de tir et la vitesse de rechargement. Chaque charge réinitialise la durée."
+  },
+  "upgrade_weapon_backstabber": {
+    "nameFr": "Traqueur",
+    "description": "Vous ouvrez une blessure quand vous infligez des dégâts des armes à bout portant, ce qui vous accorde de la bonus move speed. Les unités ennemies blessées subissent des dégâts spirituels au fil du temps, leur résistance "
+  },
+  "upgrade_express_shot": {
+    "nameFr": "Tir express",
+    "description": "Votre prochaine attaque permettra de tirer deux fois d'affilée, avec des dégâts et une vitesse des balles accrus. Cette attaque consomme des munitions supplémentaires."
+  },
+  "upgrade_bulletshredimbue": {
+    "nameFr": "Enchantement balistique",
+    "description": "Imprégnez une capacité d'une portée augmentée. Quand vous infligez des dégâts avec cette capacité, les dégâts des armes par unité occultiste touchée augmentent. Son effet est réduit sur les non-occultistes."
+  },
+  "upgrade_rechargingbullets": {
+    "nameFr": "Rechargement express",
+    "description": "L'infliction de dégâts des armes importants accorde une recharge de chacune de vos capacités chargées."
+  },
+  "upgrade_goose_egg": {
+    "nameFr": "Œuf doré",
+    "description": "Obtenez âmes au fil du temps tant que vous êtes en vie."
+  }
+}

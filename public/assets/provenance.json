@@ -1,0 +1,807 @@
+{
+  "repository": "PedroGomesFR/deadlock-blueprint",
+  "commit": "34aa8a72460479c67ec4a0fda457a389ef246eb5",
+  "owner": "Valve Corporation (game artwork)",
+  "files": [
+    {
+      "path": "public/assets/items/upgrade_capacitor.png",
+      "source": "public/icons/items/api/capacitor.png",
+      "sha256": "895b96b59facf5c80e6728a92d9867e79a4374e5fd0d8a08a285693b7c6a273f"
+    },
+    {
+      "path": "public/assets/items/upgrade_pristine_emblem.png",
+      "source": "public/icons/items/api/pristine_emblem.png",
+      "sha256": "cd7a462dc7fd9eb8e8d9acab2f764c2cd229f228d699f8797bc0207af109eada"
+    },
+    {
+      "path": "public/assets/items/upgrade_high_velocity_mag.png",
+      "source": "public/icons/items/api/high_velocity_mag.png",
+      "sha256": "22c9ce1fc4b21150be2bec367ae6917b34a890becf8daab2e6ab831b6e7b425c"
+    },
+    {
+      "path": "public/assets/items/upgrade_counterspell.png",
+      "source": "public/icons/items/api/counterspell.png",
+      "sha256": "3a3a098a96c187c89281811d62ec2ac8702c83e23167c51cfa3f590d94a19be9"
+    },
+    {
+      "path": "public/assets/items/upgrade_weighted_shots.png",
+      "source": "public/icons/items/api/weighted_shots.png",
+      "sha256": "36cb85628896cd2cff26343c4f87e7009fb72cb346583612213e1c3ecbdcd564"
+    },
+    {
+      "path": "public/assets/items/upgrade_long_range.png",
+      "source": "public/icons/items/api/long_range.png",
+      "sha256": "35661e2897d8e0a419024c3d5b91451f68416e3734241723879b1d57fd8ca544"
+    },
+    {
+      "path": "public/assets/items/upgrade_slowing_bullets.png",
+      "source": "public/icons/items/api/slowing_bullets.png",
+      "sha256": "0bbdc65db92df3d648727c1b63971d8aff29683f4efb01059f6701bc07c0b7a4"
+    },
+    {
+      "path": "public/assets/items/upgrade_inhibitor.png",
+      "source": "public/icons/items/api/inhibitor.png",
+      "sha256": "759e1c8e13f614b24939ac776f41935abdc81373c97a126b60e17c6f952694cc"
+    },
+    {
+      "path": "public/assets/items/upgrade_berserker.png",
+      "source": "public/icons/items/api/berserker.png",
+      "sha256": "3ce38be400dff58845b8823666c78b8c2e052bf24d0d59ede485c71be4a3fef4"
+    },
+    {
+      "path": "public/assets/items/upgrade_siphon_bullets.png",
+      "source": "public/icons/items/api/siphon_bullets.png",
+      "sha256": "1ddc088622e0095a70c604387c2c873b5b47938b3de6668cb048bec4e0627de3"
+    },
+    {
+      "path": "public/assets/items/upgrade_headshot_booster.png",
+      "source": "public/icons/items/api/headshot_booster.png",
+      "sha256": "1a4e65cc5db1311522d269a605dcab5e4e48ab208294a847d2cd1ebe38490033"
+    },
+    {
+      "path": "public/assets/items/upgrade_sharpshooter.png",
+      "source": "public/icons/items/api/sharpshooter.png",
+      "sha256": "536f7c301c530c2d04ddf0b628e1fcc6f6976b1483e56c95191f6a1e94d4eb48"
+    },
+    {
+      "path": "public/assets/items/upgrade_headhunter.png",
+      "source": "public/icons/items/api/headhunter.png",
+      "sha256": "8840a70e56acf87e1390764a1890199808f1e08683715ce992210d2251eb62a5"
+    },
+    {
+      "path": "public/assets/items/upgrade_toxic_bullets.png",
+      "source": "public/icons/items/api/toxic_bullets.png",
+      "sha256": "fde58bf2d4839f09628d61a3e7c153d864e4f3583865d39433f1d609638f67a4"
+    },
+    {
+      "path": "public/assets/items/upgrade_ricochet.png",
+      "source": "public/icons/items/api/ricochet.png",
+      "sha256": "1aae5ff9f5367c953139f6ca23781da7190338958efb6663cde8e9bdb10552c6"
+    },
+    {
+      "path": "public/assets/items/upgrade_debuff_reducer.png",
+      "source": "public/icons/items/api/debuff_reducer.png",
+      "sha256": "e28b056ffe15152d3419bd76ecc93a27bf3757d7aacf3834f005c79560493ea9"
+    },
+    {
+      "path": "public/assets/items/upgrade_metal_skin.png",
+      "source": "public/icons/items/api/metal_skin.png",
+      "sha256": "cf71c5a2b6db53c4f7ffa881a9c2f0893bf92a0c03e582f700ef6ea824ee7181"
+    },
+    {
+      "path": "public/assets/items/upgrade_healing_booster.png",
+      "source": "public/icons/items/api/healing_booster.png",
+      "sha256": "e6f39b7bda6e93e23bef9905e3fe733cc9d4445d15b2a030c408148dbd969193"
+    },
+    {
+      "path": "public/assets/items/upgrade_trophy_collector.png",
+      "source": "public/icons/items/api/trophy_collector.png",
+      "sha256": "f5874630471517bc2c9dd03de3e1c1cb636e671c1932c04fce83db863a2e1636"
+    },
+    {
+      "path": "public/assets/items/upgrade_superior_stamina.png",
+      "source": "public/icons/items/api/superior_stamina.png",
+      "sha256": "1f8167c13a101adf9c8aa97ae2114b231dc1b045c072c5dec694bc476e491a58"
+    },
+    {
+      "path": "public/assets/items/upgrade_rapid_rounds.png",
+      "source": "public/icons/items/api/rapid_rounds.png",
+      "sha256": "293bc43962be704bdf3d32c9eca3fc2e5808048258b0c0089152ceb750c7ac5f"
+    },
+    {
+      "path": "public/assets/items/upgrade_grit.png",
+      "source": "public/icons/items/api/grit.png",
+      "sha256": "1c1742eb202e3aee2bd927c5a5cbae75ba122e6b084b62a13cef056f9f47b76d"
+    },
+    {
+      "path": "public/assets/items/upgrade_weapon_shielding.png",
+      "source": "public/icons/items/api/weapon_shielding.png",
+      "sha256": "6980330d04a7674cb4fabd79e90436448cc901eca126850c7e6f16d3a07a4cba"
+    },
+    {
+      "path": "public/assets/items/upgrade_improved_spirit.png",
+      "source": "public/icons/items/api/improved_spirit.png",
+      "sha256": "fb5ea6a3f394af72f1059980a1f162b4c8d3485420ffa7f10e192c09a7a2b931"
+    },
+    {
+      "path": "public/assets/items/upgrade_mystic_regeneration.png",
+      "source": "public/icons/items/api/mystic_regeneration.png",
+      "sha256": "2b3bd154a5de26f5cb2c954da192c7114d9e9f634dcdfd5f351dc9468b24c257"
+    },
+    {
+      "path": "public/assets/items/upgrade_return_fire.png",
+      "source": "public/icons/items/api/return_fire.png",
+      "sha256": "cd63627beb26508354a45b743b42710d9bfe9432bb843cfa856d5f9f6e42fd3c"
+    },
+    {
+      "path": "public/assets/items/upgrade_extra_charge.png",
+      "source": "public/icons/items/api/extra_charge.png",
+      "sha256": "abb6fc8e61bab0e7ab8c6f2f613b76dfb1817ca914053b10d3cac0e8d0726b9c"
+    },
+    {
+      "path": "public/assets/items/upgrade_bullet_resist_shredder.png",
+      "source": "public/icons/items/api/bullet_resist_shredder.png",
+      "sha256": "c141552dac8434fabc6ed6110e9ec7806da55ec120037b7bee1fbabb5bd1403b"
+    },
+    {
+      "path": "public/assets/items/upgrade_mystic_reverb.png",
+      "source": "public/icons/items/api/mystic_reverb.png",
+      "sha256": "9582742ae77a497cbe13caa8fc9fd9f1539dd8912424127c8dd3e88ab573f902"
+    },
+    {
+      "path": "public/assets/items/upgrade_healbane.png",
+      "source": "public/icons/items/api/healbane.png",
+      "sha256": "04439d4257bad226ce7bf09d08aafa686168a6c06987427a02dad441bf75b1d2"
+    },
+    {
+      "path": "public/assets/items/upgrade_escalating_exposure.png",
+      "source": "public/icons/items/api/escalating_exposure.png",
+      "sha256": "c640abce00f857a818b158564cb1c21e290d0ee9e7979ccb33bd82e0e1bc4c10"
+    },
+    {
+      "path": "public/assets/items/upgrade_rapid_recharge.png",
+      "source": "public/icons/items/api/rapid_recharge.png",
+      "sha256": "e79e4b4f199fb172d021c37ab71caed4a42c830ad5d51571812609922b210831"
+    },
+    {
+      "path": "public/assets/items/upgrade_transcendent_cooldown.png",
+      "source": "public/icons/items/api/transcendent_cooldown.png",
+      "sha256": "23c4ae8cedb0e8bdd675abe70a43e0913200494abf0c0d747bcb7390d3e0faf4"
+    },
+    {
+      "path": "public/assets/items/upgrade_spirit_sap.png",
+      "source": "public/icons/items/api/spirit_sap.png",
+      "sha256": "179a4e257ca5b379133c7875b9a01cc2575ed8efed0783d6e4dc957024515c10"
+    },
+    {
+      "path": "public/assets/items/upgrade_focus_lens.png",
+      "source": "public/icons/items/api/focus_lens.png",
+      "sha256": "db44adcd3b1ad376bf4800ce854f88d78b29e5bae6801b72555077ff6f49ff3b"
+    },
+    {
+      "path": "public/assets/items/upgrade_rescue_beam.png",
+      "source": "public/icons/items/api/rescue_beam.png",
+      "sha256": "6120fa0cea3f790933dc63c0e5483cd4fe436fa515161096c7d7070e7455ef97"
+    },
+    {
+      "path": "public/assets/items/upgrade_phantom_strike.png",
+      "source": "public/icons/items/api/phantom_strike.png",
+      "sha256": "71c6c54fdad5b16dac39e6299410a437b5bbea9b89e52a3af781199515daf889"
+    },
+    {
+      "path": "public/assets/items/upgrade_warp_stone.png",
+      "source": "public/icons/items/api/warp_stone.png",
+      "sha256": "f443c82d30a22e2b76ed8e880c1726cb657d19c9b433e279fe5b3047e54341bb"
+    },
+    {
+      "path": "public/assets/items/upgrade_cheat_death.png",
+      "source": "public/icons/items/api/cheat_death.png",
+      "sha256": "f1df038ad93807e22b05d2faaad9cf37217c3c0f727dad30567981b4a09bfa89"
+    },
+    {
+      "path": "public/assets/items/upgrade_restorative_locket.png",
+      "source": "public/icons/items/api/restorative_locket.png",
+      "sha256": "0cdb5bbd52ac3bd00607bcf034e205f6c05b7f58d449a46b058cdd8d09d06350"
+    },
+    {
+      "path": "public/assets/items/upgrade_infuser.png",
+      "source": "public/icons/items/api/infuser.png",
+      "sha256": "05a7dbd8bd4fd418bc1eaa388d2e976758f3a04a5a11e6a44a8158fe24e098e1"
+    },
+    {
+      "path": "public/assets/items/upgrade_guardian_ward.png",
+      "source": "public/icons/items/api/guardian_ward.png",
+      "sha256": "fda51a32a3b9d600a56b80a85de6ee56f50fd15049100f150067029f7495be3d"
+    },
+    {
+      "path": "public/assets/items/upgrade_divine_barrier.png",
+      "source": "public/icons/items/api/divine_barrier.png",
+      "sha256": "6e714245c61a427a17c33ac3dab9fe24609b4924ca67993d3d5defd66e217b23"
+    },
+    {
+      "path": "public/assets/items/upgrade_blood_tribute.png",
+      "source": "public/icons/items/api/blood_tribute.png",
+      "sha256": "a7461c88811a4a62b27b85ac6143496f01f2b51fef94925a1a610dd8fa99d7be"
+    },
+    {
+      "path": "public/assets/items/upgrade_arcane_surge.png",
+      "source": "public/icons/items/api/arcane_surge.png",
+      "sha256": "3b85906afbb9edf9078a6a9c8fc16df1934bfd85183fb569894e59facd36d5c7"
+    },
+    {
+      "path": "public/assets/items/upgrade_unstoppable.png",
+      "source": "public/icons/items/api/unstoppable.png",
+      "sha256": "ae63da996394963f5af0ea6936a0623fdce354b412685a80bca2ce83030d1b6e"
+    },
+    {
+      "path": "public/assets/items/upgrade_colossus.png",
+      "source": "public/icons/items/api/colossus.png",
+      "sha256": "9d0d33711825e7ab41c3085323efb98cba6fb6e8ad81dc728208b8c2d4921fee"
+    },
+    {
+      "path": "public/assets/items/upgrade_cold_front.png",
+      "source": "public/icons/items/api/cold_front.png",
+      "sha256": "c663136ca0920d6defffb070f7da753631b7e6227b2f8d2f81f5b1dc67dd091d"
+    },
+    {
+      "path": "public/assets/items/upgrade_arctic_blast.png",
+      "source": "public/icons/items/api/arctic_blast.png",
+      "sha256": "0eefad21e999a5dfe9276e40cdef89fa21889a8d7ad74176c7a4b88540146f09"
+    },
+    {
+      "path": "public/assets/items/upgrade_glass_cannon.png",
+      "source": "public/icons/items/api/glass_cannon.png",
+      "sha256": "ec9ead21582347b551126808d5f2e855753720b140040f077c2c977bef2e508d"
+    },
+    {
+      "path": "public/assets/items/upgrade_fury_trance.png",
+      "source": "public/icons/items/api/fury_trance.png",
+      "sha256": "68934baa9fec190a10538bcf72d8a972b69fd4d589497efdceb97e02aaa8ab20"
+    },
+    {
+      "path": "public/assets/items/upgrade_spirit_snatch.png",
+      "source": "public/icons/items/api/spirit_snatch.png",
+      "sha256": "2d663206613b5605ac74838fde659c27db7a68dcc4f1f6ee4c913f4f7c310346"
+    },
+    {
+      "path": "public/assets/items/upgrade_melee_charge.png",
+      "source": "public/icons/items/api/melee_charge.png",
+      "sha256": "ac9b1013568248d0d3cad6be94e948f353594db5ed55f418829805085cdf92f6"
+    },
+    {
+      "path": "public/assets/items/upgrade_crushing_fists.png",
+      "source": "public/icons/items/api/crushing_fists.png",
+      "sha256": "e4a74b7091765c2434f3adeb3ecd059d0aac08d9f2d91258f637a644a77cffe3"
+    },
+    {
+      "path": "public/assets/items/upgrade_diviners_kevlar.png",
+      "source": "public/icons/items/api/diviners_kevlar.png",
+      "sha256": "79b8f41039e5d37c6ecf58ba9edbf5e6a8c7008a2d3d6f986b585c19d19bd43e"
+    },
+    {
+      "path": "public/assets/items/upgrade_boundless_spirit.png",
+      "source": "public/icons/items/api/boundless_spirit.png",
+      "sha256": "80d6125910ead20f994348b177b4857c5646fbc85ea8431823823dc7e097e88d"
+    },
+    {
+      "path": "public/assets/items/upgrade_burst_fire.png",
+      "source": "public/icons/items/api/burst_fire.png",
+      "sha256": "182d531fd576bc05c0a9da4d36393de13af7276df28efa1e6294322981e6e292"
+    },
+    {
+      "path": "public/assets/items/upgrade_suppressor.png",
+      "source": "public/icons/items/api/suppressor.png",
+      "sha256": "61f151093d401c723304e28231545293bed015b19d4841a6ed87fecea4923ffc"
+    },
+    {
+      "path": "public/assets/items/upgrade_veil_walker.png",
+      "source": "public/icons/items/api/veil_walker.png",
+      "sha256": "36d8741358b3706433a7efa3eb899070f1bb572989c0016705671fa94132abcd"
+    },
+    {
+      "path": "public/assets/items/upgrade_split_shot.png",
+      "source": "public/icons/items/api/split_shot.png",
+      "sha256": "16522f2418d95e798eae19d8166c9d47ef6a91a39849ac14b1d333ce17f7eee5"
+    },
+    {
+      "path": "public/assets/items/upgrade_active_reload.png",
+      "source": "public/icons/items/api/active_reload.png",
+      "sha256": "c2004e076aafd5678e9ee7c95353a96e3e905ecb86b1796d9e271a4d0c6794a5"
+    },
+    {
+      "path": "public/assets/items/upgrade_magic_carpet.png",
+      "source": "public/icons/items/api/magic_carpet.png",
+      "sha256": "76825b15d21d00979cc7e1a8d9b635b8a9f1b94d41ee980168b4c245495d614d"
+    },
+    {
+      "path": "public/assets/items/upgrade_spirit_burn.png",
+      "source": "public/icons/items/api/spirit_burn.png",
+      "sha256": "f127b027f9cda8f1b8a6be520d9dca75c5852316e354d21fe3372e7acb394240"
+    },
+    {
+      "path": "public/assets/items/upgrade_spellbreaker.png",
+      "source": "public/icons/items/api/spellbreaker.png",
+      "sha256": "10b316dcde2d4a86a450f9e7db05563e639f13265af47f4c5c01623089b5b41f"
+    },
+    {
+      "path": "public/assets/items/upgrade_juggernaut.png",
+      "source": "public/icons/items/api/juggernaut.png",
+      "sha256": "a46d1c30e0fae7b47034de664e5743788e2b34508eef283193187778acbaa51e"
+    },
+    {
+      "path": "public/assets/items/upgrade_express_shot.png",
+      "source": "public/icons/items/api/express_shot.png",
+      "sha256": "25a834f452892927636cbc4bd7e2eaa5a311c1f5431ae162784fb88277745ce1"
+    },
+    {
+      "path": "public/assets/heroes/infernus.png",
+      "source": "public/icons/heroes/infernus.png",
+      "sha256": "9bbca89de152e3ebc5e412bd6e810b9de021e19edf5e2fe031695a10d09ec8a0"
+    },
+    {
+      "path": "public/assets/heroes/haze.png",
+      "source": "public/icons/heroes/haze.png",
+      "sha256": "5da8fc526e4a39657b9032cfcf822267b60b1456fb7583e8e0f7651fe99ad2b8"
+    },
+    {
+      "path": "public/assets/heroes/seven.png",
+      "source": "public/icons/heroes/seven.png",
+      "sha256": "782493c84d265c9454b6bfd2b773868a238c6484d6b69f9fc92482a9ad5152a5"
+    },
+    {
+      "path": "public/assets/heroes/wraith.png",
+      "source": "public/icons/heroes/wraith.png",
+      "sha256": "4efb3e7b3146eddbec509284c7fc56cfcf36e7c85c2161e1138f922d46524f39"
+    },
+    {
+      "path": "public/assets/items/upgrade_clip_size.png",
+      "source": "public/icons/items/api/extended_magazine.png",
+      "sha256": "23010a351ad38740d68d7e1d7e130ef6415b8e7fbf2b041f74e39760301926a0"
+    },
+    {
+      "path": "public/assets/items/upgrade_non_player_bonus.png",
+      "source": "public/icons/items/api/monster_rounds.png",
+      "sha256": "94a2756553999e482bb3c2a904b6f120cc39fae87cbe2c78e16c7d69a42cee8e"
+    },
+    {
+      "path": "public/assets/items/upgrade_non_player_bonus_sacrifice.png",
+      "source": "public/icons/items/api/cultist_sacrifice.png",
+      "sha256": "62a7079519a9ba5b9795734d64aea278c4aa36c596e8ae55bf124fa5196c953e"
+    },
+    {
+      "path": "public/assets/items/upgrade_chain_lightning.png",
+      "source": "public/icons/items/api/tesla_bullets.png",
+      "sha256": "0ff939601c4201e48c0563d0797084a4ceaac88a0729e1707b8b4f9c42fda696"
+    },
+    {
+      "path": "public/assets/items/upgrade_hollow_point_rounds.png",
+      "source": "public/icons/items/api/hollow_point.png",
+      "sha256": "33e053d544c111202e3aa4bca958044bc398075ef6c19e9534e31abc3a4af891"
+    },
+    {
+      "path": "public/assets/items/upgrade_lifestrike_gauntlets.png",
+      "source": "public/icons/items/api/melee_lifesteal.png",
+      "sha256": "97237719f308c3ccbfe573dd6d06cf394dd395f3c47598b62171d42a0f50d580"
+    },
+    {
+      "path": "public/assets/items/upgrade_melee_rebuttal.png",
+      "source": "public/icons/items/api/rebuttal.png",
+      "sha256": "46165c0b721720ed3d6d1e2cfbcc17285dcba4ff97a2e626430ec70ff8f6af26"
+    },
+    {
+      "path": "public/assets/items/upgrade_close_range.png",
+      "source": "public/icons/items/api/close_quarters.png",
+      "sha256": "151ba4d7d56fe5ee538d2e204ab7c0d63a357b041a72de21095213a3d6430842"
+    },
+    {
+      "path": "public/assets/items/upgrade_tech_defense_shredders.png",
+      "source": "public/icons/items/api/soul_shredder_bullets.png",
+      "sha256": "5ba3793df4076835ab577465efd6a239fefe31a1c8a681c8a428e330aee3fede"
+    },
+    {
+      "path": "public/assets/items/upgrade_dps_aura.png",
+      "source": "public/icons/items/api/heroic_aura.png",
+      "sha256": "9322cb562216f9c6af2bd68ccf8634eb9018ec8e6a03394cdb641873a48fe049"
+    },
+    {
+      "path": "public/assets/items/upgrade_targeted_silence.png",
+      "source": "public/icons/items/api/silence_wave.png",
+      "sha256": "3a38d9a10d97a77f995831c0c76bfae89886b1550e410a6a26371bcdd655c429"
+    },
+    {
+      "path": "public/assets/items/upgrade_proc_silence.png",
+      "source": "public/icons/items/api/silencer.png",
+      "sha256": "92f914763ecb73d8ac02b61c29da6eda4b147ac991079a243e39c0d3a3a8f34e"
+    },
+    {
+      "path": "public/assets/items/upgrade_fervor.png",
+      "source": "public/icons/items/api/frenzy.png",
+      "sha256": "b7df8c9702d138e6b687343938ac666ad50ad7d169e045d4765bae53d5e9eafd"
+    },
+    {
+      "path": "public/assets/items/upgrade_headshot_booster2.png",
+      "source": "public/icons/items/api/weakening_headshot.png",
+      "sha256": "1e957a262e2ef4f912ebb240db4c0048836953c36b8ca70f2a5d0d3cf1d20732"
+    },
+    {
+      "path": "public/assets/items/upgrade_spellslinger_headshots.png",
+      "source": "public/icons/items/api/spirit_rend.png",
+      "sha256": "88711c16af65eadbf9398a73d8b066ab182e0a4f7f39afe849013f2f7c45c801"
+    },
+    {
+      "path": "public/assets/items/upgrade_banshee_slugs.png",
+      "source": "public/icons/items/api/crippling_headshot.png",
+      "sha256": "0f5c2eefc89bdcc58c6cec10766af83d557452dd4156c4e8865186d2103f905a"
+    },
+    {
+      "path": "public/assets/items/upgrade_crackshot.png",
+      "source": "public/icons/items/api/mystic_shot.png",
+      "sha256": "097fb3620974be52621fe0ec7aa384e9b72692666577a131ff0ee570d6579a5f"
+    },
+    {
+      "path": "public/assets/items/upgrade_critshot.png",
+      "source": "public/icons/items/api/lucky_shot.png",
+      "sha256": "5994b20dfa91e8266e8e0e20164445d1505447168a0bb93e1254291cbe674fe3"
+    },
+    {
+      "path": "public/assets/items/upgrade_close_quarter_combat.png",
+      "source": "public/icons/items/api/point_blank.png",
+      "sha256": "50dcba5d5b2826c55c62284b247c84d0d7b493cf0a998505910fdad1ad7aae61"
+    },
+    {
+      "path": "public/assets/items/upgrade_health.png",
+      "source": "public/icons/items/api/extra_health.png",
+      "sha256": "2d383fcdf19f9454c081ee5d25118919ba0d94aa6ca69e9742ee08bf0cb0d054"
+    },
+    {
+      "path": "public/assets/items/upgrade_vampire.png",
+      "source": "public/icons/items/api/bullet_lifesteal.png",
+      "sha256": "af99ced00af6f21e61532c5c578366fa94ed7e6649abbc1ba56c7ff10feec37a"
+    },
+    {
+      "path": "public/assets/items/upgrade_reduce_debuff_duration.png",
+      "source": "public/icons/items/api/debuff_remover.png",
+      "sha256": "b9ae6810d722bc1f31e61d6223b6e647e8c8ff32f45e40ec96856460178d98cb"
+    },
+    {
+      "path": "public/assets/items/upgrade_tech_purge.png",
+      "source": "public/icons/items/api/spirit_resilience.png",
+      "sha256": "fc49646d8241becb00b85a54f19b192f594fc234dd97ac70ef76d1373f85f403"
+    },
+    {
+      "path": "public/assets/items/upgrade_improved_bullet_armor.png",
+      "source": "public/icons/items/api/bullet_resilience.png",
+      "sha256": "4b87a2a0578af4611811b9d193264c89ff23c057b9d00111fe2fa795dc8b9e6b"
+    },
+    {
+      "path": "public/assets/items/upgrade_chonky.png",
+      "source": "public/icons/items/api/fortitude.png",
+      "sha256": "55a44329c3e6784063084eda86a28c392049638f9678c6611dd077380aa252ab"
+    },
+    {
+      "path": "public/assets/items/upgrade_damage_recycler.png",
+      "source": "public/icons/items/api/leech.png",
+      "sha256": "1f47913f9be2864131a72f49a934b0b9948b3276635a91f3ff25b1d875805b33"
+    },
+    {
+      "path": "public/assets/items/upgrade_sprint_booster.png",
+      "source": "public/icons/items/api/sprint_boots.png",
+      "sha256": "813c74f05965588fd274008e67d76d86ca872fbf6ddd11a3a33c30488682ae79"
+    },
+    {
+      "path": "public/assets/items/upgrade_cardio_calibrator.png",
+      "source": "public/icons/items/api/enduring_speed.png",
+      "sha256": "2c2d46e390653bc507f31713b4a2bb2f1a597c3ae2df777b06f263d835c20541"
+    },
+    {
+      "path": "public/assets/items/upgrade_improved_stamina.png",
+      "source": "public/icons/items/api/extra_stamina.png",
+      "sha256": "81e52d851e6f5447dde5855dd138f64ecd256fd8884207190dc1c6da402a9f24"
+    },
+    {
+      "path": "public/assets/items/upgrade_bullet_armor_reduction_aura.png",
+      "source": "public/icons/items/api/hunters_aura.png",
+      "sha256": "a21288dec60848deba39bbe7d49ef1eab3cea22df817692659369ee31dc5de7d"
+    },
+    {
+      "path": "public/assets/items/upgrade_spirit_bubble.png",
+      "source": "public/icons/items/api/spirit_shielding.png",
+      "sha256": "2d94b98207866a3581b8d29cd3ab878705e9a48e1ec6f57a2448a4355a084de8"
+    },
+    {
+      "path": "public/assets/items/upgrade_regenerating_bullet_shield.png",
+      "source": "public/icons/items/api/battle_vest.png",
+      "sha256": "6c2ea234fef25fcb4a3bf4df3c431744062a178a23fc17d71c279edc4d59e434"
+    },
+    {
+      "path": "public/assets/items/upgrade_magic_shield.png",
+      "source": "public/icons/items/api/enchanters_barrier.png",
+      "sha256": "eab9b45fbd7695a338b3d8f24ee0684e084aaec993ae8e9682c27d0d43b28ad9"
+    },
+    {
+      "path": "public/assets/items/upgrade_soaring_spirit.png",
+      "source": "public/icons/items/api/improved_spirit.png",
+      "sha256": "fb5ea6a3f394af72f1059980a1f162b4c8d3485420ffa7f10e192c09a7a2b931"
+    },
+    {
+      "path": "public/assets/items/upgrade_tech_overflow.png",
+      "source": "public/icons/items/api/spiritual_overflow.png",
+      "sha256": "7b8a62cd6693900574a58098447b47dcec64cde6d2160f7cbcef768d3dcd6cc8"
+    },
+    {
+      "path": "public/assets/items/upgrade_tech_range.png",
+      "source": "public/icons/items/api/greater_expansion.png",
+      "sha256": "80161568a0b8c77bdcf9923acfbaa291f033ae05f35537bba7c36e6271929505"
+    },
+    {
+      "path": "public/assets/items/upgrade_magic_reach.png",
+      "source": "public/icons/items/api/mystic_reach.png",
+      "sha256": "15950f41931f884faadcf50859afe25ab7e751c59252c99f34b40e615ce87e3b"
+    },
+    {
+      "path": "public/assets/items/upgrade_health_stealing_magic.png",
+      "source": "public/icons/items/api/spirit_lifesteal.png",
+      "sha256": "593d9bcef14c06c22457b97fe1546db5046ac3a17ac5c41b802b0c2cb5f1400e"
+    },
+    {
+      "path": "public/assets/items/upgrade_magic_burst.png",
+      "source": "public/icons/items/api/mystic_burst.png",
+      "sha256": "878468d193a9ae6a2c6317aff3c41ff8587fc989dfff529e88346a9ec357bcc1"
+    },
+    {
+      "path": "public/assets/items/upgrade_magic_shock.png",
+      "source": "public/icons/items/api/improved_burst.png",
+      "sha256": "f64adc4b98e5a780bc43833cff56a7d6bbbc162b10669184bf2b3cfa2edaf22b"
+    },
+    {
+      "path": "public/assets/items/upgrade_magic_vulnerability.png",
+      "source": "public/icons/items/api/mystic_vulnerability.png",
+      "sha256": "5fd052bb38d1ff83e90219896e89d98190cb958ba5460cba4ed486f20ba5fb9c"
+    },
+    {
+      "path": "public/assets/items/upgrade_magic_slow.png",
+      "source": "public/icons/items/api/mystic_slow.png",
+      "sha256": "66210d1f1c70cdf794cccd5b1071898549235bbcbc4c861639a88b14356e8e82"
+    },
+    {
+      "path": "public/assets/items/upgrade_magic_tempo.png",
+      "source": "public/icons/items/api/improved_cooldown.png",
+      "sha256": "3c0991f4edadea2e084a73474f99c1bfaeae4f51d3db893cc3ca9450188cb470"
+    },
+    {
+      "path": "public/assets/items/upgrade_cooldown_reduction.png",
+      "source": "public/icons/items/api/superior_cooldown.png",
+      "sha256": "603836ee1d9cf81ae3345a8b8aa292e8d499265e5372f1b432146c9298313a82"
+    },
+    {
+      "path": "public/assets/items/upgrade_containment.png",
+      "source": "public/icons/items/api/slowing_hex.png",
+      "sha256": "71cf6b89368571edd2b3bc4666e39eb0630995c94c16567c351bdd0dea90079c"
+    },
+    {
+      "path": "public/assets/items/upgrade_withering_whip.png",
+      "source": "public/icons/items/api/rusted_barrel.png",
+      "sha256": "77f4742a3bab344916de86d124d3ca35f36d4d8c9dbf1d837619469788e4a964"
+    },
+    {
+      "path": "public/assets/items/upgrade_greater_withering_whip.png",
+      "source": "public/icons/items/api/disarming_hex.png",
+      "sha256": "ed0afc376cf5026bb324e1435554cf801d0639e9d9456a92ad2aec834dfbfcb3"
+    },
+    {
+      "path": "public/assets/items/upgrade_rupture.png",
+      "source": "public/icons/items/api/decay.png",
+      "sha256": "36722161c348c69982ce15437860dbd1a57df9d28db7051b6e31619fee23a18e"
+    },
+    {
+      "path": "public/assets/items/upgrade_discord.png",
+      "source": "public/icons/items/api/scourge.png",
+      "sha256": "1a00e57ae39c2f85f02746e361eb1fa70594dc1f882cf8589f89c0049deb22e5"
+    },
+    {
+      "path": "public/assets/items/upgrade_target_stun.png",
+      "source": "public/icons/items/api/knockdown.png",
+      "sha256": "b859109802e6cd363851a238f235190caee2b389b2bed5611fb5ad865ee90ae5"
+    },
+    {
+      "path": "public/assets/items/upgrade_aoe_root.png",
+      "source": "public/icons/items/api/vortex_web.png",
+      "sha256": "82ec387d9946b178597890d9e52a038a1e36d56ff081b76ba1e5a3027314e431"
+    },
+    {
+      "path": "public/assets/items/upgrade_ability_refresher.png",
+      "source": "public/icons/items/api/refresher.png",
+      "sha256": "5dd06381c1c9052c3c46e75e549a3962dc1c8e7e22d729163bdb8a8f14377f05"
+    },
+    {
+      "path": "public/assets/items/upgrade_ability_power_shard.png",
+      "source": "public/icons/items/api/echo_shard.png",
+      "sha256": "6d1d575edc442bb79feae3504aa8cf5ec9ff52606c9a871eb1e2219ac888af7f"
+    },
+    {
+      "path": "public/assets/items/upgrade_tech_damage_pulse.png",
+      "source": "public/icons/items/api/torment_pulse.png",
+      "sha256": "ec306566b192595386244e934f7a59b52de17c6b52c3cf190fe57ffb08f9e224"
+    },
+    {
+      "path": "public/assets/items/upgrade_cloaking_device_active.png",
+      "source": "public/icons/items/api/shadow_weave.png",
+      "sha256": "5622edbfdb772df45a3b4b03423bed23b0c4378cd5a45ad5b5ce6a0cbc806c31"
+    },
+    {
+      "path": "public/assets/items/upgrade_rocket_booster.png",
+      "source": "public/icons/items/api/majestic_leap.png",
+      "sha256": "bad73410e3e146c4018007698593f3c803d7204c60183e77a9d377ae4c6d5932"
+    },
+    {
+      "path": "public/assets/items/upgrade_health_nova.png",
+      "source": "public/icons/items/api/healing_nova.png",
+      "sha256": "86d880db1db38951edea312a4314e61cc3570b8753302f3fc5f904c822458f27"
+    },
+    {
+      "path": "public/assets/items/upgrade_health_stimpak.png",
+      "source": "public/icons/items/api/healing_rite.png",
+      "sha256": "ee55fb4785bf0fdc6e5c75ef88eb351383f89e6a7f338c7a9e9677fb6ddb5b8b"
+    },
+    {
+      "path": "public/assets/items/upgrade_thermal_detonator.png",
+      "source": "public/icons/items/api/alchemical_fire.png",
+      "sha256": "e281f4e28474539ecd2dadeda3ad053462e527a437ee5c60cd03d5a089e3a53d"
+    },
+    {
+      "path": "public/assets/items/upgrade_fleetfoot_boots.png",
+      "source": "public/icons/items/api/fleetfoot.png",
+      "sha256": "3b4c2162defcc4e1516d23d27722fb06d33648778fc3380304d42e42a5aa402a"
+    },
+    {
+      "path": "public/assets/items/upgrade_kinetic_sash.png",
+      "source": "public/icons/items/api/kinetic_dash.png",
+      "sha256": "aa4d10844429da826206b38187b6c1ed28e551f5ed479a07c1a683308307228f"
+    },
+    {
+      "path": "public/assets/items/upgrade_self_bubble.png",
+      "source": "public/icons/items/api/ethereal_shift.png",
+      "sha256": "280f0a5a61a761e882dcff27cfb6bd2836411e4ee128bd9d4fe2fd299da6831b"
+    },
+    {
+      "path": "public/assets/items/upgrade_glitch.png",
+      "source": "public/icons/items/api/cursed_relic.png",
+      "sha256": "842053fcd507641076428b480feb55ee221b0d8b2c29fed16325de364705fcb8"
+    },
+    {
+      "path": "public/assets/items/upgrade_arcane_extension.png",
+      "source": "public/icons/items/api/duration_extender.png",
+      "sha256": "a02880f8cfcd7827579e5983ffeb7c79588aac90bed7d09cdfe3ee7e73ce232d"
+    },
+    {
+      "path": "public/assets/items/upgrade_imbued_duration_extender.png",
+      "source": "public/icons/items/api/superior_duration.png",
+      "sha256": "d9e03ccf81ace4da7a93ffe23dad8afdd9aa0c6cdf5639c0cca6146f441b37b0"
+    },
+    {
+      "path": "public/assets/items/upgrade_surging_power.png",
+      "source": "public/icons/items/api/vampiric_burst.png",
+      "sha256": "d676775258aee4326064726e694580f376ccf943e2c1b73e9166d047426a5cba"
+    },
+    {
+      "path": "public/assets/items/upgrade_boxing_glove.png",
+      "source": "public/icons/items/api/lifestrike.png",
+      "sha256": "623f5b05c7fff43886ecbcfa3c585dffb648ee9ddc2f8bdd2a0b375fb274d0f3"
+    },
+    {
+      "path": "public/assets/items/upgrade_acolytes_glove.png",
+      "source": "public/icons/items/api/spirit_strike.png",
+      "sha256": "757e66fbcb3837db9b90fc5e810ba37e82cd2e0845b242fe4673af07c09128d6"
+    },
+    {
+      "path": "public/assets/items/upgrade_resonant_healing.png",
+      "source": "public/icons/items/api/radiant_regeneration.png",
+      "sha256": "ada94affe5e15b6a3e26f8039ccafd40319988aae634df1dafd4d5579440b0fb"
+    },
+    {
+      "path": "public/assets/items/upgrade_endurance.png",
+      "source": "public/icons/items/api/extra_regen.png",
+      "sha256": "58f7ba88d04e834ea745194837bdfc198dc49b35c595cb3b26a91d9ec971e5e8"
+    },
+    {
+      "path": "public/assets/items/upgrade_magic_storm.png",
+      "source": "public/icons/items/api/surge_of_power.png",
+      "sha256": "fc90da9ca7918c382566752f61baa1eca6a089d8e6b876a1c0bb0cd4dbb66925"
+    },
+    {
+      "path": "public/assets/items/upgrade_quick_silver.png",
+      "source": "public/icons/items/api/quicksilver_reload.png",
+      "sha256": "711f214ecf6d48d05f4b5d5bba23b07089738a416e04e58f7d98be1ce3ade163"
+    },
+    {
+      "path": "public/assets/items/upgrade_ethereal_bullets.png",
+      "source": "public/icons/items/api/mercurial_magnum.png",
+      "sha256": "a679c7cab67a35aa6268940806165a490bfabb7a86e310d88da5818e87359fe0"
+    },
+    {
+      "path": "public/assets/items/upgrade_intensifying_clip.png",
+      "source": "public/icons/items/api/intensifying_magazine.png",
+      "sha256": "bbf30c1b19e5bc77f8d66c6e7cf409cc81ada2e9a9ab51f5023d53f8adba5590"
+    },
+    {
+      "path": "public/assets/items/upgrade_reinforcing_casings.png",
+      "source": "public/icons/items/api/escalating_resilience.png",
+      "sha256": "523708f838fc9ff1b5f97b529e50618b78c0e4e882cd9b22e3901fc3ae1f27ec"
+    },
+    {
+      "path": "public/assets/items/upgrade_blitz_bullets.png",
+      "source": "public/icons/items/api/swift_striker.png",
+      "sha256": "57292e58913e99e68cf5f07c7bdf28a5a196415915e9fd90c255c929349617e1"
+    },
+    {
+      "path": "public/assets/items/upgrade_vex_barrier.png",
+      "source": "public/icons/items/api/reactive_barrier.png",
+      "sha256": "81cea5ba72905fac066a060da200526307d67ae7f11cbe05f36c9cb0fe448b7f"
+    },
+    {
+      "path": "public/assets/items/upgrade_auto_cleanse.png",
+      "source": "public/icons/items/api/indomitable.png",
+      "sha256": "378da1cb6ece3b1b0595b55c1c0739b1bd366f7ea8f51191e286958a0bcd340f"
+    },
+    {
+      "path": "public/assets/items/upgrade_medic_bullets.png",
+      "source": "public/icons/items/api/restorative_shot.png",
+      "sha256": "9f6999f951434f8efa47b495582146d3b9f299d8acbf8914a3895575b1cb4b51"
+    },
+    {
+      "path": "public/assets/items/upgrade_titan_round.png",
+      "source": "public/icons/items/api/titanic_magazine.png",
+      "sha256": "8b3b9d9743a6267ef11a0b00fc35d6ce7ed544e1151c3f2ef405ba167a344c99"
+    },
+    {
+      "path": "public/assets/items/upgrade_ultimate_burst.png",
+      "source": "public/icons/items/api/lightning_scroll.png",
+      "sha256": "096f131813cd54457f1835e3ab810ca7f1d836c3190ff117780efa6ed4c03e45"
+    },
+    {
+      "path": "public/assets/items/upgrade_absorbing_armor.png",
+      "source": "public/icons/items/api/witchmail.png",
+      "sha256": "f8b809f64db2610c59e68f4e7c3a6842aa2a5a75392f88807bdaa6d2827d50dc"
+    },
+    {
+      "path": "public/assets/items/upgrade_healbuff.png",
+      "source": "public/icons/items/api/healing_tempo.png",
+      "sha256": "4360a193c06eb438967e2219ff03bf71005088555356b0480388899f07393b4e"
+    },
+    {
+      "path": "public/assets/items/upgrade_aprounds.png",
+      "source": "public/icons/items/api/armor_piercer.png",
+      "sha256": "e592fef8ece304f591eb0c9c11af927a53df87af199ce84cbb4ca03261b39f5e"
+    },
+    {
+      "path": "public/assets/items/upgrade_deflecting_armor.png",
+      "source": "public/icons/items/api/plated_armor.png",
+      "sha256": "141048bb4f5840ec3507a9376d0fcf70239bf6dc832de745a08ec7f6d6b8a246"
+    },
+    {
+      "path": "public/assets/items/upgrade_enchanted_holsters.png",
+      "source": "public/icons/items/api/spellslinger.png",
+      "sha256": "4ab1f95b83324934b172e7f7de63eb877203142b1b5457ffc02edcdab1ce0e81"
+    },
+    {
+      "path": "public/assets/items/upgrade_weapon_backstabber.png",
+      "source": "public/icons/items/api/stalker.png",
+      "sha256": "63f3982f3ef9036e82c748727ee125e8ba339c0a9ac412848fbff98c721533de"
+    },
+    {
+      "path": "public/assets/items/upgrade_bulletshredimbue.png",
+      "source": "public/icons/items/api/ballistic_enchantment.png",
+      "sha256": "4d5ffc8dade593156d98defb68bb939e3646738d141bc66dfc5f80a32d5a6e7a"
+    },
+    {
+      "path": "public/assets/items/upgrade_rechargingbullets.png",
+      "source": "public/icons/items/api/recharging_rush.png",
+      "sha256": "46ccde854278b4bd26526721bd99795d071fe241d79c392c9428bb172320536a"
+    },
+    {
+      "path": "public/assets/items/upgrade_goose_egg.png",
+      "source": "public/icons/items/api/golden_goose_egg.png",
+      "sha256": "9249cc98c0342184ebfcc20656fe4a2ea6c79edf3a7156cd984392928bd1c645"
+    }
+  ]
+}
