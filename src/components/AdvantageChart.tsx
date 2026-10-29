@@ -50,15 +50,11 @@ export function AdvantageChart({
         role="img"
         aria-label="Part des âmes de votre équipe"
         onClick={(e) => {
-          const r = e.currentTarget.getBoundingClientRect()
+          const matrix = e.currentTarget.getScreenCTM()
+          if (!matrix) return
+          const value = new DOMPoint(e.clientX, e.clientY).matrixTransform(matrix.inverse()).x
           onSelect(
-            Math.max(
-              0,
-              Math.min(
-                duration,
-                ((((e.clientX - r.left) / r.width) * w - left) / (w - left - right)) * duration,
-              ),
-            ),
+            Math.max(0, Math.min(duration, ((value - left) / (w - left - right)) * duration)),
           )
         }}
       >

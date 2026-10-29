@@ -21,6 +21,11 @@ import {
   Target,
   TriangleAlert,
   Upload,
+  X,
+  Search,
+  ChevronLeft,
+  Play,
+  Pause,
 } from 'lucide-react'
 import type { Match, Profile } from '../domain/types'
 import { importPlayerData, personalModel } from '../domain/player'
@@ -37,6 +42,8 @@ import {
   type ReviewMoment,
   type ReviewOverview,
 } from '../domain/review'
+import { reviewSlides, currentSlide } from '../domain/reviewSlides'
+import { matchMap, mapObjective } from '../domain/gameMap'
 import { heroIdentity } from '../domain/heroRoster'
 import { useReviewAnalysis } from '../hooks/useReviewAnalysis'
 import { ApiError, getJson } from './PlayerDialog'
@@ -45,6 +52,7 @@ import { MatchChart } from './MatchChart'
 import { TacticalMap, type TacticalArrow } from './TacticalMap'
 import { AdvantageChart } from './AdvantageChart'
 import './ReviewChapters.css'
+import './ReviewTheater.css'
 
 const EMPTY: Match[] = []
 const chapters = [
@@ -263,6 +271,7 @@ function MomentScene({
   moment: ReviewMoment
   onBuild: () => void
 }) {
+  const [playing, setPlaying] = useState(false)
   const [phase, setPhase] = useState(1),
     [customTime, setCustomTime] = useState<number | null>(null)
   const times = [
@@ -272,7 +281,26 @@ function MomentScene({
   ]
   const time = customTime ?? times[phase],
     scene = sceneAt(match, time)
-  const focus = scene.players.find((p) => p.id === String(match.accountId)) ?? scene.death
+  const calibration = matchMap(match),
+    objective = moment.objective ? mapObjective(moment.objective, calibration) : undefined
+  const eventDeath = [...(match.deathDetails ?? [])]
+    .reverse()
+    .find((d) => moment.deathTimes.includes(d.time) && d.time <= time)
+  const historicalDeath = time >= moment.time ? eventDeath?.position : undefined
+  const focus = scene.players.find((p) => p.id === String(match.accountId)) ?? historicalDeath
+  useEffect(() => {
+    if (!playing) return
+    const timer = window.setInterval(
+      () =>
+        setCustomTime((old) => {
+          const next = Math.min(moment.end, (old ?? times[phase]) + 1)
+          if (next >= moment.end) setPlaying(false)
+          return next
+        }),
+      250,
+    )
+    return () => window.clearInterval(timer)
+  }, [playing, moment.id, moment.end, phase])
   const respawn = match.deathDetails?.find(
     (d) =>
       moment.deathTimes.includes(d.time) &&
@@ -281,19 +309,21 @@ function MomentScene({
       d.time <= moment.objective.destroyedTime &&
       d.time + d.respawnDuration! > moment.objective.destroyedTime,
   )
-  const arrows: TacticalArrow[] = scene.trails.flatMap((trail) => {
-    const p = trail.points.filter((p) => p.alive !== false && p.health !== 0)
-    const a = p.at(-2),
-      b = p.at(-1)
-    return a &&
-      b &&
-      b.time - a.time <= 12 &&
-      b.time <= time &&
-      time - b.time <= 12 &&
-      Math.hypot(a.x - b.x, a.y - b.y) > 20
-      ? [{ from: a, to: b, kind: 'observed' as const, label: 'Déplacement entre deux relevés' }]
-      : []
-  })
+  const arrows: TacticalArrow[] = scene.trails
+    .filter((trail) => trail.id === String(match.accountId))
+    .flatMap((trail) => {
+      const p = trail.points.filter((p) => p.alive !== false && p.health !== 0)
+      const a = p.at(-2),
+        b = p.at(-1)
+      return a &&
+        b &&
+        b.time - a.time <= 12 &&
+        b.time <= time &&
+        time - b.time <= 12 &&
+        Math.hypot(a.x - b.x, a.y - b.y) > 20
+        ? [{ from: a, to: b, kind: 'observed' as const, label: 'Déplacement entre deux relevés' }]
+        : []
+    })
   return (
     <div className="moment-workspace">
       <div className="scene-column">
@@ -303,6 +333,7 @@ function MomentScene({
               key={label}
               className={phase === i && customTime === null ? 'active' : ''}
               onClick={() => {
+                setPlaying(false)
                 setPhase(i)
                 setCustomTime(null)
               }}
@@ -318,7 +349,19 @@ function MomentScene({
           selfTeam={match.team}
           players={scene.players}
           trails={scene.trails}
-          death={scene.death}
+          death={scene.death ?? historicalDeath}
+          deathTime={historicalDeath ? eventDeath?.time : undefined}
+          coordinateSpace={calibration ? 'world' : 'relative'}
+          calibration={calibration}
+          objective={
+            objective && moment.objective
+              ? {
+                  ...objective,
+                  label: objectiveLabel(moment.objective),
+                  destroyed: time >= moment.objective.destroyedTime,
+                }
+              : undefined
+          }
           arrows={arrows}
           focus={focus ? { ...focus, radius: PROXIMITY_RADIUS } : undefined}
           highlightId={
@@ -328,6 +371,16 @@ function MomentScene({
           }
         />
         <div className="scene-slider">
+          <button
+            className="icon-button scene-play"
+            aria-label={playing ? 'Mettre la scène en pause' : 'Lire la scène'}
+            onClick={() => {
+              if (!playing && time >= moment.end) setCustomTime(moment.start)
+              setPlaying((v) => !v)
+            }}
+          >
+            {playing ? <Pause size={16} /> : <Play size={16} />}
+          </button>
           <span>{clock(moment.start)}</span>
           <input
             type="range"
@@ -336,7 +389,10 @@ function MomentScene({
             max={moment.end}
             step={1}
             value={time}
-            onChange={(e) => setCustomTime(Number(e.target.value))}
+            onChange={(e) => {
+              setPlaying(false)
+              setCustomTime(Number(e.target.value))
+            }}
           />
           <span>{clock(moment.end)}</span>
         </div>
@@ -360,7 +416,7 @@ function MomentScene({
                 {clock(moment.damage.start)} — {clock(moment.damage.end)}
               </span>
             </div>
-            {moment.damage.actors.slice(0, 4).map((actor) => (
+            {moment.damage.actors.slice(0, 2).map((actor) => (
               <div
                 className="damage-actor"
                 key={actor.slot}
@@ -479,7 +535,9 @@ function BuildAudit({
   at,
   onAt,
   onStudy,
+  activeCaseId,
 }: {
+  activeCaseId?: string
   match: Match
   cases: BuildCase[]
   at: number
@@ -487,31 +545,33 @@ function BuildAudit({
   onStudy: (m: Match, t: number) => void
 }) {
   const [caseId, setCaseId] = useState<string | null>(null),
-    selected = cases.find((c) => c.id === caseId) ?? cases[0],
+    selected = cases.find((c) => c.id === (activeCaseId ?? caseId)) ?? cases[0],
     inventory = inventoryAt(match, at)
   return (
     <div className="build-audit">
-      <div className="audit-cases">
-        {cases.map((c) => (
-          <button
-            key={c.id}
-            className={selected?.id === c.id ? 'active' : ''}
-            onClick={() => {
-              setCaseId(c.id)
-              onAt(c.time)
-            }}
-          >
-            <HeroPortrait hero={heroOf(c.targetHero)} name={`#${c.targetHero}`} size="tiny" />
-            <span>
-              <strong>{c.title}</strong>
-              <small>
-                {clock(c.time)} · {heroOf(c.targetHero)?.name ?? `#${c.targetHero}`}
-              </small>
-            </span>
-            <ChevronRight size={15} />
-          </button>
-        ))}
-      </div>
+      {!activeCaseId && (
+        <div className="audit-cases">
+          {cases.map((c) => (
+            <button
+              key={c.id}
+              className={selected?.id === c.id ? 'active' : ''}
+              onClick={() => {
+                setCaseId(c.id)
+                onAt(c.time)
+              }}
+            >
+              <HeroPortrait hero={heroOf(c.targetHero)} name={`#${c.targetHero}`} size="tiny" />
+              <span>
+                <strong>{c.title}</strong>
+                <small>
+                  {clock(c.time)} · {heroOf(c.targetHero)?.name ?? `#${c.targetHero}`}
+                </small>
+              </span>
+              <ChevronRight size={15} />
+            </button>
+          ))}
+        </div>
+      )}
       {selected ? (
         <section className="stat-panel audit-detail">
           <div className="stat-panel-heading">
@@ -727,8 +787,13 @@ export function Review({
   onStudy: (m: Match, time: number) => void
 }) {
   const [selectedId, setSelectedId] = useState<string | null>(null),
-    [chapter, setChapter] = useState(0),
-    [momentId, setMomentId] = useState<string | null>(null),
+    [slideId, setSlideId] = useState('bilan'),
+    [direction, setDirection] = useState(1),
+    [graph, setGraph] = useState<'economy' | 'share'>('economy'),
+    [query, setQuery] = useState(''),
+    [resultFilter, setResultFilter] = useState<'all' | 'win' | 'loss'>('all'),
+    [listPage, setListPage] = useState(0),
+    [pageSize, setPageSize] = useState(8),
     [at, setAt] = useState(600)
   const [error, setError] = useState(''),
     [busyId, setBusyId] = useState<string | null>(null)
@@ -746,8 +811,62 @@ export function Review({
   const matches = profile?.matches ?? EMPTY,
     selected = matches.find((m) => m.id === selectedId),
     analysis = useReviewAnalysis(selected, matches),
-    moments = analysis.moments ?? [],
-    moment = moments.find((m) => m.id === momentId) ?? moments[0]
+    moments = analysis.moments ?? []
+  const slides = reviewSlides(analysis.moments, analysis.build),
+    slide = currentSlide(slides, slideId),
+    slideIndex = slides.indexOf(slide),
+    chapter = slide.chapter
+  const moment = moments.find((m) => m.id === slide.momentId)
+  const dialog = useRef<HTMLDialogElement>(null),
+    slideBody = useRef<HTMLDivElement>(null),
+    listBody = useRef<HTMLDivElement>(null)
+  const filtered = matches.filter(
+    (m) =>
+      (resultFilter === 'all' || m.outcome === resultFilter) &&
+      `${heroOf(m.heroId)?.name ?? ''} ${m.id}`
+        .toLocaleLowerCase('fr')
+        .includes(query.toLocaleLowerCase('fr')),
+  )
+  const pages = Math.max(1, Math.ceil(filtered.length / pageSize)),
+    safePage = Math.min(listPage, pages - 1),
+    visibleMatches = filtered.slice(safePage * pageSize, (safePage + 1) * pageSize)
+  function navigate(id: string) {
+    const next = slides.findIndex((s) => s.id === id)
+    setDirection(next < slideIndex ? -1 : 1)
+    setSlideId(id)
+  }
+  function closeReview() {
+    request.current++
+    setSelectedId(null)
+    setError('')
+    setBusyId(null)
+  }
+  useEffect(() => {
+    const el = listBody.current
+    if (!el) return
+    const observer = new ResizeObserver(([entry]) =>
+      setPageSize(Math.max(3, Math.min(12, Math.floor(entry.contentRect.height / 64)))),
+    )
+    observer.observe(el)
+    return () => observer.disconnect()
+  }, [profile?.accountId])
+  useEffect(() => {
+    if (!selected) return
+    const el = dialog.current
+    if (!el) return
+    const previous = document.body.style.overflow,
+      focus = document.activeElement as HTMLElement | null
+    el.showModal()
+    document.body.style.overflow = 'hidden'
+    return () => {
+      if (el.open) el.close()
+      document.body.style.overflow = previous
+      if (focus?.isConnected) focus.focus({ preventScroll: true })
+    }
+  }, [selected?.id])
+  useEffect(() => {
+    if (selected) slideBody.current?.focus({ preventScroll: true })
+  }, [slide.id, selected?.id])
   const refs = useMemo(
     () => (selected ? comparableHistory(selected, matches) : EMPTY),
     [selected, matches],
@@ -859,8 +978,7 @@ export function Review({
     }
   }, [selected]) // One metadata attempt per selection, never a polling loop.
   function openMoment(m: ReviewMoment) {
-    setMomentId(m.id)
-    setChapter(1)
+    navigate(`moment:${m.id}`)
   }
   function selectMatch(m: Match) {
     request.current++
@@ -870,19 +988,30 @@ export function Review({
     setDetailError(null)
     setError('')
     setSelectedId(m.id)
-    setChapter(0)
-    setMomentId(null)
+    setSlideId('bilan')
+    setDirection(1)
     setAt(Math.min(600, m.duration))
   }
+  const chapterSlides = slides.filter((s) => s.chapter === chapter),
+    withinChapter = chapterSlides.indexOf(slide)
+  const next = () => {
+    if (slideIndex < slides.length - 1) navigate(slides[slideIndex + 1].id)
+    else closeReview()
+  }
+  const previous = () => {
+    if (slideIndex > 0) navigate(slides[slideIndex - 1].id)
+  }
   return (
-    <div className="review-page">
+    <div className="review-page match-library">
       <div className="section-toolbar">
         <button className="text-button" onClick={onBack}>
-          <ArrowLeft size={16} /> Builds
+          <ArrowLeft size={16} />
+          Builds
         </button>
         <h1>Mes parties</h1>
         <button className="button" onClick={onConnect}>
-          <Upload size={15} /> Importer
+          <Upload size={15} />
+          Mon compte
         </button>
       </div>
       {!profile ? (
@@ -890,237 +1019,337 @@ export function Review({
           <Database size={42} />
           <h2>Mes parties</h2>
           <button className="button primary" onClick={onConnect}>
-            <Download size={15} /> Charger mon historique
+            <Download size={15} />
+            Charger mon historique
           </button>
         </div>
       ) : (
-        <div className="review-layout chapter-layout">
-          <aside className="match-list" aria-label="Liste des parties">
-            <div className="list-heading">
-              Historique <span>{matches.length}</span>
+        <section className="match-gallery" aria-label="Historique des parties">
+          <header className="library-heading">
+            <div>
+              <span className="eyebrow">Votre historique</span>
+              <h2>{profile.account?.name ?? `Compte ${profile.accountId}`}</h2>
             </div>
-            {matches.map((m) => (
+            <div className="library-numbers">
+              <span>
+                <strong>{matches.length}</strong>parties
+              </span>
+              <span>
+                <strong>{matches.filter((m) => m.outcome === 'win').length}</strong>victoires
+              </span>
+            </div>
+          </header>
+          <div className="library-filters">
+            <label className="match-search">
+              <Search size={16} />
+              <input
+                aria-label="Rechercher une partie"
+                placeholder="Héros, numéro de partie…"
+                value={query}
+                onChange={(e) => {
+                  setQuery(e.target.value)
+                  setListPage(0)
+                }}
+              />
+            </label>
+            <div role="group" aria-label="Filtrer les résultats">
+              {(['all', 'win', 'loss'] as const).map((value) => (
+                <button
+                  key={value}
+                  aria-pressed={resultFilter === value}
+                  onClick={() => {
+                    setResultFilter(value)
+                    setListPage(0)
+                  }}
+                >
+                  {value === 'all' ? 'Toutes' : value === 'win' ? 'Victoires' : 'Défaites'}
+                </button>
+              ))}
+            </div>
+          </div>
+          <div className="match-table-head" aria-hidden="true">
+            <span>Héros</span>
+            <span>Résultat</span>
+            <span>K / D / A</span>
+            <span>Âmes</span>
+            <span>Durée</span>
+            <span>Date</span>
+            <span />
+          </div>
+          <div
+            className="match-list"
+            ref={listBody}
+            aria-label="Liste des parties"
+            style={{ '--visible-rows': pageSize } as React.CSSProperties}
+          >
+            {visibleMatches.map((m) => (
               <button
                 className={`match-row ${selectedId === m.id ? 'selected' : ''}`}
                 key={m.id}
                 onClick={() => selectMatch(m)}
+                aria-label={`Revoir ${heroOf(m.heroId)?.name ?? `héros ${m.heroId}`} · partie ${m.id}`}
               >
-                <HeroPortrait hero={heroOf(m.heroId)} name={`#${m.heroId}`} size="small" />
-                <div>
-                  <strong>{heroOf(m.heroId)?.name ?? `#${m.heroId}`}</strong>
+                <span className="match-row-hero">
+                  <HeroPortrait hero={heroOf(m.heroId)} name={`#${m.heroId}`} size="small" />
                   <span>
-                    {date(m.startTime)} · {clock(m.duration)}
+                    <strong>{heroOf(m.heroId)?.name ?? `#${m.heroId}`}</strong>
+                    <small>#{m.id}</small>
                   </span>
-                </div>
-                <span className={`outcome ${m.outcome}`}>
-                  {m.outcome === 'win' ? 'V' : m.outcome === 'loss' ? 'D' : '—'}
                 </span>
-                <ChevronRight size={15} />
+                <span className={`outcome ${m.outcome}`}>
+                  {m.outcome === 'win' ? 'Victoire' : m.outcome === 'loss' ? 'Défaite' : '—'}
+                </span>
+                <span className="list-kda">
+                  {m.kills}
+                  <i>/</i>
+                  {m.deaths}
+                  <i>/</i>
+                  {m.assists}
+                </span>
+                <span className="list-souls">{shortNumber(m.netWorth)}</span>
+                <span className="list-duration">{clock(m.duration)}</span>
+                <span className="list-date">{date(m.startTime)}</span>
+                <ChevronRight size={17} />
               </button>
             ))}
-          </aside>
-          {!selected ? (
-            <div className="review-empty select-match">
-              <Target size={38} />
-              <h2>Choisissez une partie</h2>
+            {!visibleMatches.length && (
+              <div className="chapter-empty">
+                <Search />
+                <strong>
+                  {matches.length ? 'Aucune partie trouvée' : 'Aucune partie disponible'}
+                </strong>
+                <button className="text-button" onClick={onConnect}>
+                  Synchroniser mon compte
+                  <ArrowUpRight size={14} />
+                </button>
+              </div>
+            )}
+          </div>
+          <footer className="library-pagination">
+            <span>
+              {filtered.length
+                ? `${safePage * pageSize + 1}–${Math.min((safePage + 1) * pageSize, filtered.length)} sur ${filtered.length}`
+                : '0 partie'}
+            </span>
+            <button
+              className="icon-button"
+              aria-label="Page précédente de l’historique"
+              disabled={safePage === 0}
+              onClick={() => setListPage(safePage - 1)}
+            >
+              <ChevronLeft size={17} />
+            </button>
+            <strong>
+              {safePage + 1} / {pages}
+            </strong>
+            <button
+              className="icon-button"
+              aria-label="Page suivante de l’historique"
+              disabled={safePage >= pages - 1}
+              onClick={() => setListPage(safePage + 1)}
+            >
+              <ChevronRight size={17} />
+            </button>
+          </footer>
+        </section>
+      )}
+      {selected && (
+        <dialog
+          ref={dialog}
+          className={`review-theater team-${selected.team ?? 'unknown'}`}
+          aria-label={`Review de la partie ${selected.id}`}
+          onCancel={(e) => {
+            e.preventDefault()
+            closeReview()
+          }}
+          onKeyDown={(e) => {
+            if ((e.target as HTMLElement).closest('input,select,textarea,[role="slider"]')) return
+            if (e.key === 'ArrowRight') {
+              e.preventDefault()
+              next()
+            } else if (e.key === 'ArrowLeft') {
+              e.preventDefault()
+              previous()
+            }
+          }}
+        >
+          <header className={`match-header team-${selected.team ?? 'unknown'}`}>
+            <button className="review-close text-button" onClick={closeReview}>
+              <ArrowLeft size={17} />
+              <span>Toutes les parties</span>
+            </button>
+            <HeroPortrait
+              hero={heroOf(selected.heroId)}
+              name={`#${selected.heroId}`}
+              size="large"
+            />
+            <div className="theater-identity">
+              <span className={`match-result ${selected.outcome}`}>
+                {selected.outcome === 'win'
+                  ? 'Victoire'
+                  : selected.outcome === 'loss'
+                    ? 'Défaite'
+                    : 'Résultat inconnu'}
+              </span>
+              <h2>{heroOf(selected.heroId)?.name ?? `Héros ${selected.heroId}`}</h2>
+              <div className="match-header-meta">
+                <span>#{selected.id}</span>
+                <span>{date(selected.startTime)}</span>
+                <span>
+                  <Clock3 size={12} />
+                  {clock(selected.duration)}
+                </span>
+                <span>
+                  {selected.kills} / {selected.deaths} / {selected.assists}
+                </span>
+              </div>
             </div>
-          ) : (
-            <div className="review-content chapter-content">
-              <header className={`match-header team-${selected.team ?? 'unknown'}`}>
-                <HeroPortrait
-                  hero={heroOf(selected.heroId)}
-                  name={`#${selected.heroId}`}
-                  size="large"
-                />
-                <div>
-                  <span className={`match-result ${selected.outcome}`}>
-                    {selected.outcome === 'win'
-                      ? 'Victoire'
-                      : selected.outcome === 'loss'
-                        ? 'Défaite'
-                        : 'Résultat inconnu'}
-                  </span>
-                  <h2>{heroOf(selected.heroId)?.name ?? `Héros ${selected.heroId}`}</h2>
-                  <div className="match-header-meta">
-                    <span>#{selected.id}</span>
-                    <span>{date(selected.startTime)}</span>
-                    <span>
-                      <Clock3 size={12} />
-                      {clock(selected.duration)}
-                    </span>
-                    <span>
-                      {selected.kills} / {selected.deaths} / {selected.assists}
-                    </span>
-                  </div>
-                </div>
-                <div className="match-header-actions">
-                  <button
-                    className="icon-button"
-                    title="Actualiser les détails"
-                    aria-label="Actualiser les détails"
-                    disabled={busyId === selected.id}
-                    onClick={() => void enrich(selected)}
-                  >
-                    {busyId === selected.id ? (
-                      <LoaderCircle className="spin" size={16} />
-                    ) : (
-                      <RefreshCw size={16} />
-                    )}
-                  </button>
-                </div>
-              </header>
-              <nav className="review-chapters" aria-label="Chapitres de la review">
-                {chapters.map((c, i) => (
-                  <button
-                    key={c.name}
-                    className={chapter === i ? 'active' : ''}
-                    aria-current={chapter === i ? 'step' : undefined}
-                    onClick={() => setChapter(i)}
-                  >
-                    <span className="chapter-index">0{i + 1}</span>
-                    <c.icon size={17} />
-                    <strong>{c.name}</strong>
-                    {analysis.progress >= c.stage ? (
-                      <Check size={13} className="chapter-ready" />
-                    ) : (
-                      <span className="chapter-pending" />
-                    )}
-                  </button>
-                ))}
-              </nav>
-              {busyId === selected.id && (
-                <div className="analysis-status">
+            <div className="theater-header-status">
+              {analysis.status === 'running' || busyId === selected.id ? (
+                <span role="status">
                   <LoaderCircle size={13} className="spin" />
                   {referenceProgress
                     ? `Références ${referenceProgress.done} / ${referenceProgress.total}`
-                    : 'Chargement des détails'}
-                </div>
+                    : busyId
+                      ? 'Chargement des détails'
+                      : 'Analyse en cours'}
+                </span>
+              ) : (
+                <span>
+                  <Check size={13} />
+                  Analyse prête
+                </span>
               )}
-              {analysis.status === 'running' && (
-                <div className="analysis-status" role="status">
-                  <LoaderCircle size={13} className="spin" />
-                  Analyse en cours <progress value={analysis.progress} max={4} />
-                </div>
+              {!!selected.telemetryWarnings?.length && (
+                <span className="compact-warning" title={selected.telemetryWarnings.join('\n')}>
+                  <TriangleAlert size={13} />
+                  Données partielles
+                </span>
               )}
-              {error && (
-                <div className="error-box" role="alert">
-                  {error}
-                  <div className="metadata-recovery">
-                    {detailError?.recoverable && (
-                      <button
-                        className="button"
-                        disabled={busyId !== null}
-                        onClick={() => void enrich(selected, true)}
-                      >
-                        <Download size={13} />
-                        Récupérer via Steam
-                      </button>
-                    )}
-                    <a
-                      href="https://deadlock-api.com/ingest-cache"
-                      target="_blank"
-                      rel="noreferrer"
-                    >
-                      Synchroniser les parties <ArrowUpRight size={13} />
-                    </a>
+              <button
+                className="icon-button"
+                aria-label="Actualiser les détails"
+                disabled={busyId === selected.id}
+                onClick={() => void enrich(selected)}
+              >
+                <RefreshCw size={15} />
+              </button>
+            </div>
+            <button
+              className="theater-dismiss icon-button"
+              aria-label="Fermer la review"
+              onClick={closeReview}
+            >
+              <X size={20} />
+            </button>
+          </header>
+          <nav className="review-chapters" aria-label="Chapitres de la review">
+            {chapters.map((c, i) => (
+              <button
+                key={c.name}
+                className={chapter === i ? 'active' : ''}
+                aria-current={chapter === i ? 'step' : undefined}
+                onClick={() => navigate(slides.find((s) => s.chapter === i)!.id)}
+              >
+                <span className="chapter-index">0{i + 1}</span>
+                <c.icon size={16} />
+                <strong>{c.name}</strong>
+                {analysis.progress >= c.stage ? (
+                  <Check size={12} className="chapter-ready" />
+                ) : (
+                  <span className="chapter-pending" />
+                )}
+              </button>
+            ))}
+          </nav>
+          <div className="review-stage" ref={slideBody} tabIndex={-1}>
+            <div
+              className={`review-slide slide-${slide.kind} ${direction < 0 ? 'backward' : ''}`}
+              key={`${selected.id}:${slide.id}`}
+            >
+              {slide.kind === 'bilan' && analysis.overview && (
+                <Overview
+                  match={selected}
+                  overview={analysis.overview}
+                  moments={moments}
+                  onMoment={openMoment}
+                  onReferences={
+                    analysis.overview.grade === null && referenceCandidates.length
+                      ? () => void enrichReferences()
+                      : undefined
+                  }
+                  referenceBusy={busyId !== null}
+                />
+              )}
+              {slide.kind === 'moment' &&
+                analysis.moments &&
+                (moment ? (
+                  <MomentScene
+                    key={moment.id}
+                    match={selected}
+                    moment={moment}
+                    onBuild={() => {
+                      setAt(moment.time)
+                      navigate(slides.find((s) => s.chapter === 2)!.id)
+                    }}
+                  />
+                ) : (
+                  <div className="chapter-empty">
+                    <Eye />
+                    <strong>Aucun moment isolé</strong>
+                    <span>
+                      Les positions, décès et objectifs disponibles ne permettent pas d’isoler une
+                      séquence.
+                    </span>
                   </div>
-                </div>
+                ))}
+              {slide.kind === 'build' && analysis.build && (
+                <BuildAudit
+                  key={`${selected.id}:${slide.caseId ?? 'empty'}`}
+                  activeCaseId={slide.caseId}
+                  match={selected}
+                  cases={analysis.build}
+                  at={atTime}
+                  onAt={setAt}
+                  onStudy={onStudy}
+                />
               )}
-              {referenceIssues && (
-                <div className="reference-problems" role="status">
-                  <Info size={13} />
-                  <span>
-                    Références : {referenceIssues.loaded} chargées · {referenceIssues.missing} non
-                    chargées
-                  </span>
-                  <a href="https://deadlock-api.com/ingest-cache" target="_blank" rel="noreferrer">
-                    Synchroniser
-                    <ArrowUpRight size={11} />
-                  </a>
-                </div>
-              )}
-              {analysis.status === 'error' && (
-                <div className="error-box" role="alert">
-                  {analysis.error}
-                  <button className="button" onClick={analysis.retry}>
-                    Relancer
-                  </button>
-                </div>
-              )}
-              {selected.telemetryWarnings?.length ? (
-                <div className="compact-warning" title={selected.telemetryWarnings.join('\n')}>
-                  <TriangleAlert size={13} /> Données partielles
-                </div>
-              ) : null}
-              <div className="chapter-body" key={`${selected.id}-${chapter}`}>
-                {chapter === 0 && analysis.overview && (
-                  <Overview
-                    match={selected}
-                    overview={analysis.overview}
-                    moments={moments}
-                    onMoment={openMoment}
-                    onReferences={
-                      analysis.overview.grade === null && referenceCandidates.length
-                        ? () => void enrichReferences()
-                        : undefined
-                    }
-                    referenceBusy={busyId !== null}
-                  />
-                )}
-                {chapter === 1 &&
-                  analysis.moments &&
-                  (moment ? (
-                    <div className="moments-chapter">
-                      <div className="moment-rail" aria-label="Moments détectés">
-                        {moments.map((m, i) => (
-                          <button
-                            key={m.id}
-                            className={moment.id === m.id ? 'active' : ''}
-                            onClick={() => setMomentId(m.id)}
-                          >
-                            <span>0{i + 1}</span>
-                            <MomentIcon moment={m} />
-                            <strong>{clock(m.time)}</strong>
-                            <span>{m.title}</span>
-                          </button>
-                        ))}
-                      </div>
-                      <MomentScene
-                        key={moment.id}
+              {slide.kind === 'economy' && analysis.advantage && (
+                <div className="theater-charts">
+                  <div className="theater-chart-title">
+                    <div>
+                      <span className="eyebrow">L’ensemble de votre partie</span>
+                      <h3>
+                        {graph === 'economy'
+                          ? 'Votre trajectoire économique'
+                          : 'L’équilibre des équipes'}
+                      </h3>
+                    </div>
+                    <div className="graph-choice" role="group" aria-label="Choisir une courbe">
+                      <button
+                        aria-pressed={graph === 'economy'}
+                        onClick={() => setGraph('economy')}
+                      >
+                        Économie
+                      </button>
+                      <button aria-pressed={graph === 'share'} onClick={() => setGraph('share')}>
+                        Part des âmes
+                      </button>
+                    </div>
+                  </div>
+                  <section className={`stat-panel match-graph-panel ${graph}`}>
+                    <div className="stat-panel-heading">
+                      <h3>{graph === 'economy' ? 'Économie' : 'Part des âmes'}</h3>
+                      <span className="chart-time">{clock(atTime)}</span>
+                    </div>
+                    {graph === 'economy' ? (
+                      <MatchChart
                         match={selected}
-                        moment={moment}
-                        onBuild={() => {
-                          setAt(moment.time)
-                          setChapter(2)
-                        }}
+                        at={atTime}
+                        onSelect={setAt}
+                        reference={reference}
                       />
-                    </div>
-                  ) : (
-                    <div className="chapter-empty">
-                      <Eye />
-                      <strong>Aucun moment isolé</strong>
-                      <span>Chargez les positions, décès et objectifs.</span>
-                    </div>
-                  ))}
-                {chapter === 2 && analysis.build && (
-                  <BuildAudit
-                    key={selected.id}
-                    match={selected}
-                    cases={analysis.build}
-                    at={atTime}
-                    onAt={setAt}
-                    onStudy={onStudy}
-                  />
-                )}
-                {chapter === 3 && analysis.advantage && (
-                  <div className="overview-charts">
-                    <section className="stat-panel">
-                      <div className="stat-panel-heading">
-                        <h3>Part des âmes</h3>
-                        <span title="Patrimoine de votre équipe / patrimoine des deux équipes. Interpolation entre relevés selon leur cadence, sans extrapolation. 12 chronologies exigées.">
-                          <Info size={14} />
-                        </span>
-                      </div>
+                    ) : (
                       <AdvantageChart
                         at={atTime}
                         onMoment={openMoment}
@@ -1129,63 +1358,101 @@ export function Review({
                         moments={moments}
                         onSelect={setAt}
                       />
-                    </section>
-                    <section className="stat-panel match-graph-panel">
-                      <div className="stat-panel-heading">
-                        <h3>Économie</h3>
-                        <span className="chart-time">{clock(atTime)}</span>
-                      </div>
-                      <MatchChart
-                        match={selected}
-                        at={atTime}
-                        onSelect={setAt}
-                        reference={reference}
-                      />
-                      {!selected.stats.length && (
-                        <button
-                          className="button empty-chart-action"
-                          onClick={() => void enrich(selected)}
-                          disabled={busyId === selected.id}
-                        >
-                          <Download size={14} /> Charger la chronologie
-                        </button>
-                      )}
-                    </section>
-                    <div className="overview-jump">
-                      <button className="button" onClick={() => setChapter(2)}>
-                        Inventaire à {clock(atTime)} <ArrowRight size={14} />
+                    )}
+                    {!selected.stats.length && (
+                      <button
+                        className="button empty-chart-action"
+                        onClick={() => void enrich(selected)}
+                        disabled={busyId === selected.id}
+                      >
+                        <Download size={14} />
+                        Charger la chronologie
                       </button>
-                    </div>
-                    <TeamSummary match={selected} />
+                    )}
+                  </section>
+                  <div className="overview-jump">
+                    <button
+                      className="button"
+                      onClick={() => navigate(slides.find((s) => s.chapter === 2)!.id)}
+                    >
+                      Inventaire à {clock(atTime)}
+                      <ArrowUpRight size={14} />
+                    </button>
                   </div>
-                )}
-                {analysis.progress < chapters[chapter].stage && analysis.status !== 'error' && (
-                  <div className="chapter-loading">
-                    <LoaderCircle className="spin" />
-                    <span>Calcul du chapitre</span>
-                  </div>
-                )}
-              </div>
-              <footer className="chapter-footer">
-                <button
-                  className="text-button"
-                  disabled={chapter === 0}
-                  onClick={() => setChapter((n) => n - 1)}
-                >
-                  <ArrowLeft size={15} /> Précédent
-                </button>
-                <span>{chapter + 1} / 4</span>
-                <button
-                  className="button"
-                  disabled={chapter === 3}
-                  onClick={() => setChapter((n) => n + 1)}
-                >
-                  Suivant <ArrowRight size={15} />
-                </button>
-              </footer>
+                </div>
+              )}
+              {slide.kind === 'teams' && <TeamSummary match={selected} />}
+              {analysis.progress < chapters[chapter].stage && analysis.status !== 'error' && (
+                <div className="chapter-loading">
+                  <LoaderCircle className="spin" />
+                  <span>Calcul du chapitre</span>
+                </div>
+              )}
             </div>
-          )}
-        </div>
+          </div>
+          <div className="review-feedback">
+            {error && (
+              <div className="error-box" role="alert">
+                <span>{error}</span>
+                <div className="metadata-recovery">
+                  {detailError?.recoverable && (
+                    <button
+                      className="button"
+                      disabled={busyId !== null}
+                      onClick={() => void enrich(selected, true)}
+                    >
+                      <Download size={13} />
+                      Récupérer via Steam
+                    </button>
+                  )}
+                  <a href="https://deadlock-api.com/ingest-cache" target="_blank" rel="noreferrer">
+                    Synchroniser les parties
+                    <ArrowUpRight size={12} />
+                  </a>
+                </div>
+              </div>
+            )}
+            {referenceIssues && (
+              <div className="reference-problems" role="status">
+                <Info size={13} />
+                Références : {referenceIssues.loaded} chargées · {referenceIssues.missing} non
+                chargées
+              </div>
+            )}
+            {analysis.status === 'error' && (
+              <div className="error-box" role="alert">
+                {analysis.error}
+                <button className="button" onClick={analysis.retry}>
+                  Relancer
+                </button>
+              </div>
+            )}
+          </div>
+          <footer className="chapter-footer">
+            <button className="text-button" disabled={slideIndex === 0} onClick={previous}>
+              <ArrowLeft size={16} />
+              <span>Précédent</span>
+            </button>
+            <div className="slide-counter" aria-live="polite">
+              <strong>
+                {chapters[chapter].name}
+                {chapterSlides.length > 1 ? ` · ${withinChapter + 1}/${chapterSlides.length}` : ''}
+              </strong>
+              <span>
+                {slideIndex + 1} / {slides.length}
+              </span>
+              <div className="slide-progress" aria-hidden="true">
+                {slides.map((s) => (
+                  <i key={s.id} className={s.id === slide.id ? 'active' : ''} />
+                ))}
+              </div>
+            </div>
+            <button className="button primary theater-next" onClick={next}>
+              {slideIndex === slides.length - 1 ? 'Terminer' : 'Suivant'}
+              <ArrowRight size={16} />
+            </button>
+          </footer>
+        </dialog>
       )}
     </div>
   )

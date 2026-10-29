@@ -1,44 +1,34 @@
 # Carte des moments de partie
 
-Le composant `TacticalMap` affiche les coordonnées réellement enregistrées. Il fonctionne sans carte de fond : la **vue relative** conserve les positions relatives et le rapport entre les axes, sans dessiner de rues, obstacles ou chemins imaginaires. Le mode **Proche** se centre sur la position connue du joueur ou son décès, avec un cercle d’observation de rayon réel. **Tous** recadre sur l’ensemble des observations fraîches. Les joueurs hors cadre sont comptés, sans être déplacés artificiellement au bord. Le repère relatif se recadre selon les observations ; il ne permet donc pas de comparer visuellement des distances entre deux moments distincts.
+Depuis l’itération du 29 octobre, la carte est l’élément central d’une page de review en plein écran. Les rues du jeu, les lignes et les événements sont affichés derrière les joueurs observés ; la review ne défile pas verticalement.
 
-## Données et projection
+## Fond de carte distribué
 
-`src/domain/map.ts` contient une projection affine testée. L'axe Y des coordonnées du monde pointe vers le haut et celui du SVG vers le bas. Pour une image carrée couvrant `[-R,+R]` sur les deux axes :
+Le masque de rues **City Never Sleeps** du 29 septembre 2026 est servi localement dans `public/assets/map/midtown-6711.avif`. Son URL publique, son empreinte et sa provenance Valve sont consignées dans `public/assets/map/provenance.json`. L’image a été inspectée sans modification graphique. Elle provient de la distribution publique de cet asset du jeu par Statlocker ; la route officielle de métadonnées nomme le même masque mais son URL PNG répondait 403. Le fond n’est pas une capture de l’interface de Statlocker.
+
+La géométrie est issue de [Deadlock API, version 6821](https://api.deadlock-api.com/v1/assets/map?client_version=6821) : rayon 10752, courbes cubiques des trois lignes et positions des objectifs. Le snapshot minimal et les dates des manifests de patch sont dans `src/data/mapSnapshot.json`. Le [code du fournisseur](https://github.com/deadlock-api/deadlock-api/blob/master/crates/game-assets/src/versions/map/mod.rs) distingue la famille City Never Sleeps à partir du build 6711. La présentation locale prend en charge cette famille jusqu’au build 6821 vérifié. Un client explicitement incompatible ne reçoit pas ce fond. En l’absence de version dans les métadonnées, le patch est choisi par la date du manifeste précédant la partie : cette déduction reste indiquée dans le titre de la carte et ne prouve pas la version exacte de son client.
+
+Les anciennes versions non couvertes conservent une vue relative, sans rues inventées. Le cadrage peut être basculé entre la vue entière (par défaut sur la carte géographique) et le voisinage du joueur. Le fond et les annotations utilisent toujours la même transformation ; les joueurs hors cadre sont comptés et ne sont pas ramenés artificiellement sur les bords.
+
+## Projection
+
+`src/domain/map.ts` projette les coordonnées observées sur le carré `[-R,+R]`, sans conversion en mètres :
 
 ```text
 imageX = (worldX + R) / (2R) × imageSize
-imageY = (R - worldY) / (2R) × imageSize
+imageY = (R − worldY) / (2R) × imageSize
 ```
 
-Cette convention et un rayon historique de `10752` sont corroborés par [Deadlock+ — paths.ts](https://github.com/deadlock-plus/deadlock-plus/blob/0dd5027754cbdeea7fd7b2c8c668ebc7e6d73dab/packages/match/src/paths.ts) et [son extraction du minimap client](https://github.com/deadlock-plus/deadlock-plus/blob/0dd5027754cbdeea7fd7b2c8c668ebc7e6d73dab/crates/ring2/dp-gamedata/src/art.rs). **Ce rayon n'est pas utilisé par défaut dans l'application** : une version différente du jeu peut modifier la carte. Aucune conversion en mètres n'est effectuée.
+Le rayon est fourni par la calibration. Les positions quantifiées sont décodées avec les bornes et résolutions propres à chaque trajectoire, avant le rendu. Les positions de marqueurs d’objectifs de l’API sont des coins supérieurs gauches CSS : leur centre ajoute la moitié de la taille documentée (10%×10%, et 30%×8% pour les bases). La base représente une zone de spawn, pas la position précise d’un bâtiment. Les lignes reprennent les splines et tangentes réelles ; elles ne servent pas de calcul de trajet praticable.
 
-La route `GET /v1/assets/map` du [schéma OpenAPI de Deadlock API](https://api.deadlock-api.com/openapi.json) fournit un `radius`, des couches d'image et des positions d'objectifs. Depuis le build `6711`, les couches `minimap`, `plain` et `mid` décrites dans ce schéma peuvent être le même masque de rues sur fond transparent, et non un fond entièrement composé. Les coordonnées normalisées des objectifs partent du coin supérieur gauche ; leur éventuel décalage d'icône doit être traité séparément de leur position réelle.
+## Lisibilité et intégrité
 
-Les positions des joueurs proviennent des `CMsgMatchPlayerPathsData` de métadonnées. La déquantification est effectuée avant le rendu dans l'adaptateur de données, avec les bornes et résolutions propres à chaque trajectoire. Le composant ne décode pas ces données et ne les complète pas.
+- Un joueur exige une position finie, observée avant ou à l’instant affiché et datant de douze secondes au maximum. Son âge est consultable au focus. Les manquants restent absents.
+- La trajectoire du joueur étudié est visible par défaut. Sélectionner un autre portrait révèle sa trajectoire ; toutes les trajectoires adverses ne sont plus superposées d’emblée. Les flèches suivent seulement les derniers relevés du joueur.
+- Les traces couvrent vingt-quatre secondes, avec rupture aux trous de plus de douze secondes et aux décès. Les sentinelles `health:0` / `alive:false` interrompent une trace sans être dessinées.
+- La lecture avance le curseur par pas d’une seconde, quatre fois par seconde ; les positions restent des relevés réels. La lecture s’arrête à la fin de l’épisode et son minuteur est supprimé à la sortie de la page.
+- Le marqueur de décès apparaît seulement après l’événement. Son heure est visible ; il peut rester comme événement historique pendant la séquence sans se transformer en joueur vivant. Le marqueur d’objectif change d’état uniquement lorsque la destruction a eu lieu.
+- Un objectif sur la carte ne prouve pas que le joueur pouvait l’atteindre, le voir ou le défendre. Aucune vision complète, navigation ou issue de combat alternative n’est déduite du fond visuel.
+- Les transitions de pages et effets visuels respectent `prefers-reduced-motion`. Les animations ne constituent pas une interpolation de positions dans le moteur.
 
-## Activation d'un fond géographique
-
-Le rendu d'une véritable carte nécessite explicitement les deux propriétés :
-
-```tsx
-coordinateSpace="world"
-calibration={{ radius: rayonVerifie, imageSrc: '/assets/map/version-verifiee.png', clientVersion: versionVerifiee }}
-```
-
-L'intégrateur doit vérifier que l'image, son cadrage, l'orientation et le rayon correspondent aux coordonnées de la partie. `clientVersion` sert à transmettre cette provenance ; le composant ne prétend pas vérifier cette correspondance automatiquement. Une image absente ou invalide fait revenir à la vue relative. Les coordonnées hors de l'image restent hors champ et ne sont pas artificiellement rabattues sur une bordure.
-
-Aucun fond géographique n'est distribué actuellement. Les requêtes vers les domaines de Deadlock API et de ses assets ont été refusées par le proxy de cet environnement (`CONNECT 403`). Les sources GitHub consultées documentent l'extraction depuis les ressources installées du jeu, mais ne fournissent pas de fond public dont le cadrage et la version puissent être vérifiés ici. Il n'est donc pas possible d'en déduire une panne du service, ni de garantir un fond adapté à une partie donnée.
-
-## Intégrité du rendu
-
-- Un marqueur joueur exige des coordonnées finies et une observation antérieure ou égale au moment affiché. Il expire après douze secondes ; son âge reste disponible au focus. Ce délai est une règle d'affichage conservatrice, pas une propriété du jeu.
-- Les traces relient uniquement des relevés fournis pendant les vingt-quatre secondes précédentes, sans franchir un trou de plus de douze secondes ni un décès. Les échantillons `health:0` / `alive:false` interrompent la trace sans être dessinés. Une liaison droite entre deux relevés n'est pas un chemin praticable calculé.
-- Aucune observation future, extrapolation, position par défaut ou interpolation n'est ajoutée. Les positions manquantes ne deviennent pas des joueurs au centre de la carte.
-- Un décès et un objectif sont dessinés uniquement si leur position a été fournie. Un objectif ne prouve pas que le joueur pouvait l'atteindre, le voir ou le défendre.
-- Les flèches `observed` montrent un lien entre points fourni par l'analyse. Les flèches `suggested` sont en pointillés et portent la légende « Option ». Elles ne prouvent ni la faisabilité d'un déplacement, ni un résultat alternatif.
-- Sans fond vérifié, le libellé « Vue relative » et le repère sans rues sont permanents. Ni lignes, ni bâtiments, ni distance de trajet ne sont inventés.
-
-Les portraits locaux déjà présents dans `public/assets/heroes` suivent la provenance existante de `public/assets/provenance.json`. Les autres marqueurs sont du SVG et des icônes Lucide, sans nouvelle image tierce. Toute future image de carte doit être ajoutée avec URL source, date/version, empreinte SHA-256 et statut d'autorisation dans une fiche de provenance sous `public/assets/map/`. Les droits des ressources du jeu restent ceux de leurs ayants droit ; aucune permission nouvelle n'est déduite de leur accessibilité.
-
-Validation ciblée : `npm test -- tests/map.test.ts` couvre les axes et bornes, la conservation des rapports spatiaux, l'absence de rabattement sur les bords, le rejet des observations futures et la rupture des traces aux trous de télémétrie.
+Les tests vérifient la projection, les marqueurs d’objectifs, le refus d’une version incompatible, les données futures et la rupture des traces. Les tests navigateur vérifient le fond réel, les trois lignes, le focus des trajectoires, la lecture, la fermeture et les dimensions de la carte dans le lecteur sans défilement.

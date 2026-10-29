@@ -1,6 +1,8 @@
 # Review par chapitres — 29 octobre 2026
 
-Le parcours « Mes parties » contient quatre chapitres libres : **Bilan**, **Moments clés**, **Build**, **Vue d’ensemble**. Le calcul s’exécute dans un Worker dédié ; chaque chapitre devient disponible après son calcul réel. Changer de partie termine le Worker précédent et invalide ses résultats. Aucun délai artificiel ni analyse fictive n’est ajouté. Le bouton « Compléter les références » charge au plus cinq anciennes parties comparables depuis le cache communautaire, une par une avec progression réelle. Il conserve les chargements réussis si un suivant échoue ; changer de partie invalide la demande en cours.
+La liste des parties est paginée et filtrable. Cliquer une ligne ouvre un lecteur occupant toute la fenêtre, sans défilement. Chaque moment et chaque cas de build a sa propre page ; les courbes et le bilan des équipes terminent le parcours. Les boutons précédent/suivant, les flèches du clavier et Échap permettent de naviguer ou revenir à la liste, avec restauration du focus et de la page de l’historique. Les transitions respectent la réduction des animations du système.
+
+Le parcours contient quatre chapitres accessibles directement : **Bilan**, **Moments clés**, **Build**, **Vue d’ensemble**. Le calcul s’exécute dans un Worker dédié ; chaque chapitre devient disponible après son calcul réel. Changer de partie termine le Worker précédent et invalide ses résultats. Aucun délai artificiel ni analyse fictive n’est ajouté. Le bouton « Compléter les références » charge au plus cinq anciennes parties comparables depuis le cache communautaire, une par une avec progression réelle. Il conserve les chargements réussis si un suivant échoue ; changer de partie invalide la demande en cours.
 
 Le code de calcul est dans `src/domain/review.ts`, la normalisation dans `src/domain/player.ts`, le rendu dans `src/components/Review.tsx`. Les valeurs et seuils ci-dessous sont des heuristiques explicites de cette version, pas des règles de Valve ni un modèle validé sur une population de joueurs.
 
@@ -30,9 +32,9 @@ Les dégâts reçus utilisent les différences de compteurs cumulatifs à leurs 
 
 Avant → Moment → Suite partage un curseur avec la chronologie. « Suite » vise d’abord la perte d’objectif associée. Les preuves agrégées gardent leurs propres horodatages/fenêtres : changer la scène ne transforme pas un total de séquence en mesure instantanée.
 
-Les positions sont observées, jamais extrapolées. Âge maximal d’affichage 12 s, traces sur 24 s, rupture aux trous >12 s et aux décès. Les échantillons morts invalident les derniers points vivants ; leurs coordonnées sentinelles ne sont jamais affichées. Les positions de décès et du tueur ne sont introduites qu’à leur horodatage exact, jamais dans « Avant ». Les flèches relient deux relevés successifs ; elles ne sont pas des routes praticables calculées.
+Les positions sont observées, jamais extrapolées. Âge maximal d’affichage 12 s, traces sur 24 s, rupture aux trous >12 s et aux décès. Les échantillons morts invalident les derniers points vivants ; leurs coordonnées sentinelles ne sont jamais affichées. Les positions du tueur ne sont introduites qu’à leur horodatage exact, jamais dans « Avant ». Un décès antérieur peut rester marqué comme événement historique, avec son heure, sans devenir une position vivante. Les flèches relient deux relevés successifs ; elles ne sont pas des routes praticables calculées.
 
-La vue proche recentre sur la position connue du joueur ou son décès, avec un cercle de rayon réel. « Tous » montre les autres positions fraîches. Le cadrage est relatif, sans terrain inventé ; voir [CARTE.md](CARTE.md) pour la projection et les conditions d’un fond géographique calibré. Aucune coordonnée d’objectif n’est déduite de son seul identifiant.
+La vue proche recentre sur la position connue du joueur ou son décès, avec un cercle de rayon réel. « Tous » montre les autres positions fraîches. Les versions récentes prises en charge disposent du fond de rues réel ; les anciennes versions non couvertes restent en vue relative, sans terrain inventé. Voir [CARTE.md](CARTE.md) pour la projection et les conditions d’un fond géographique calibré. Aucune coordonnée d’objectif n’est déduite de son seul identifiant.
 
 ## Audit des achats
 

@@ -69,15 +69,20 @@ test('personal imports actually calibrate calculations and enable contextual rev
   await expect(page.getByTestId('review-grade')).toHaveText('—')
   await chapter(page, 'Vue d’ensemble').click()
   await expect(page.getByRole('img', { name: 'Évolution du patrimoine des joueurs' })).toBeVisible()
+  await page.getByRole('button', { name: 'Suivant', exact: true }).click()
   await expect(page.getByLabel('Contexte économique des équipes')).toBeVisible()
+  await chapter(page, 'Vue d’ensemble').click()
   await expect(page.locator('.purchase-event')).toHaveCount(2)
   await expect(page.locator('.death-event')).toHaveCount(2)
   const graph = page.getByRole('img', { name: 'Évolution du patrimoine des joueurs' })
-  const bounds = await graph.boundingBox()
-  await graph.click({
-    position: { x: (bounds!.width * (62 + 878 * 0.25)) / 960, y: bounds!.height * 0.5 },
+  await page.locator('.review-slide').evaluate(async (el) => {
+    await Promise.all(el.getAnimations({ subtree: true }).map((a) => a.finished.catch(() => {})))
   })
-  // A one-pixel click quantization can shift the selected timestamp by a second.
+  const point = await graph.evaluate((svg) => {
+    const matrix = (svg as SVGSVGElement).getScreenCTM()!
+    return new DOMPoint(62 + 878 * 0.25, 150).matrixTransform(matrix).toJSON()
+  })
+  await page.mouse.click(point.x, point.y)
   await expect(page.locator('.match-graph-panel .chart-time')).toHaveText(/^7:(29|30|31)$/)
   await page.getByRole('button', { name: 'Mort à 15:00', exact: true }).click()
   await expect(page.locator('.match-graph-panel .chart-time')).toHaveText('15:00')
@@ -182,6 +187,7 @@ test('a summary has an explicit empty chart instead of fabricated observations',
   await expect(page.getByText('Chronologie indisponible', { exact: true })).toBeVisible()
   await expect(page.locator('.match-chart > svg path')).toHaveCount(0)
   await expect(page.locator('.purchase-event')).toHaveCount(0)
+  await page.getByRole('button', { name: 'Part des âmes', exact: true }).click()
   await expect(page.getByText('12 chronologies nécessaires', { exact: true })).toBeVisible()
   await chapter(page, 'Moments clés').click()
   await expect(page.getByText('Aucun moment isolé', { exact: true })).toBeVisible()
@@ -253,10 +259,11 @@ test('production worker produces four visual review chapters from recorded telem
   await phases.getByRole('button', { name: /^Avant/ }).click()
   await expect(page.locator('.map-clock')).toHaveText('14:52')
   await expect(page.locator('.map-death')).toHaveCount(0)
-  await expect(page.getByRole('button', { name: 'Proche', exact: true })).toHaveAttribute(
+  await expect(page.getByRole('button', { name: 'Tous', exact: true })).toHaveAttribute(
     'aria-pressed',
     'true',
   )
+  await page.getByRole('button', { name: 'Proche', exact: true }).click()
   await expect(page.locator('.map-player')).toHaveCount(7)
   await page.getByRole('button', { name: 'Tous', exact: true }).click()
   await expect(page.locator('.map-player')).toHaveCount(12)
@@ -273,12 +280,13 @@ test('production worker produces four visual review chapters from recorded telem
   await page.getByLabel('Instant de la scène', { exact: true }).fill('1080')
   await expect(page.locator('.map-clock')).toHaveText('18:00')
   await expect(page.locator('.episode-cursor')).toHaveText('18:00')
-  await expect(page.getByText('Positions indisponibles', { exact: true })).toBeVisible()
   await expect(page.locator('.map-player')).toHaveCount(0)
+  await expect(page.locator('.map-death')).toHaveCount(1)
+  await expect(page.locator('.map-death')).toContainText('17:00')
 
   await page.getByRole('button', { name: 'Comparer les options du build', exact: true }).click()
   await expect(chapter(page, 'Build')).toHaveAttribute('aria-current', 'step')
-  await expect(page.locator('.audit-cases button').first()).toBeVisible()
+  await expect(page.locator('.audit-detail')).toBeVisible()
   await expect(page.locator('.candidate-choice').first()).toBeVisible()
   await expect(page.locator('.candidate-options')).toContainText('Healbane')
   await expect(page.locator('.actual-choice')).toBeVisible()
@@ -286,14 +294,17 @@ test('production worker produces four visual review chapters from recorded telem
   await expect(page.getByRole('button', { name: 'Étudier cet inventaire' })).toBeEnabled()
 
   await chapter(page, 'Vue d’ensemble').click()
+  await page.getByRole('button', { name: 'Part des âmes', exact: true }).click()
   await expect(
     page.getByRole('img', { name: 'Part des âmes de votre équipe', exact: true }),
   ).toBeVisible()
   await expect(page.locator('.advantage-chart path[stroke="#70F8C1"]')).toHaveCount(1)
   await expect(page.locator('.advantage-legend')).toContainText('Équilibre économique')
+  await page.getByRole('button', { name: 'Suivant', exact: true }).click()
   await expect(page.getByLabel('Contexte économique des équipes')).toBeVisible()
   await expect(page.locator('.team-player')).toHaveCount(12)
   await expect(page.locator('main')).not.toContainText('probabilité de victoire')
+  await chapter(page, 'Vue d’ensemble').click()
   await page.getByRole('button', { name: /^Revoir 15:00/ }).click()
   await expect(chapter(page, 'Moments clés')).toHaveAttribute('aria-current', 'step')
   await expect(page.locator('.map-clock')).toHaveText('15:00')
@@ -307,6 +318,7 @@ test('changing match replaces analysis and every chapter fits a phone viewport',
   await expect(page.getByTestId('review-grade')).toHaveText(/^[ABCD]$/)
   await chapter(page, 'Moments clés').click()
   await expect(page.getByTestId('tactical-map')).toBeVisible()
+  await page.getByRole('button', { name: 'Toutes les parties', exact: true }).click()
   await page.locator('.match-row').last().click()
   await expect(chapter(page, 'Bilan')).toHaveAttribute('aria-current', 'step')
   await expect(page.locator('.match-header-meta')).toContainText('#123450')

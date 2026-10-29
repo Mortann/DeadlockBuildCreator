@@ -13,7 +13,7 @@ Première version fonctionnelle :
 - Comparaison de deux achats depuis un même inventaire et référence A/B de la trajectoire.
 - Courbes exploratoires de l’arme, des PV et de la puissance Spirit, par budget ou temps indicatif.
 - Historique via l’API communautaire ou import JSON. Économie et précision du héros choisi alimentent réellement les calculs lorsqu’elles sont disponibles.
-- Review en quatre chapitres : bilan personnel, moments horodatés avec positions, audit des achats et vue économique collective. Calcul en arrière-plan et retour de l’inventaire observé vers le laboratoire. Les règles et limites sont documentées dans [docs/REVIEW.md](docs/REVIEW.md).
+- Historique paginé et review plein écran sans défilement : bilan personnel, une page par moment et adaptation, puis courbes et bilan des équipes. Carte du jeu centrale sur les versions récentes prises en charge, lecture des scènes, navigation clavier et transitions. Calcul en arrière-plan et retour de l’inventaire observé vers le laboratoire. Les règles et limites sont documentées dans [docs/REVIEW.md](docs/REVIEW.md).
 
 Sous Windows, le plus simple est de télécharger [Installer-Deadlock.cmd](https://raw.githubusercontent.com/Mortann/DeadlockBuildCreator/codex/deadlock-build-lab/Installer-Deadlock.cmd), puis de faire un double-clic. Node.js 24 ou plus récent est nécessaire (le fichier ouvre le site officiel s’il manque). Git n’est pas nécessaire.
 

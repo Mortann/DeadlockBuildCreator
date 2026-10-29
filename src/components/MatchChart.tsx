@@ -59,8 +59,9 @@ export function MatchChart({
         role="img"
         aria-label="Évolution du patrimoine des joueurs"
         onClick={(e) => {
-          const rect = e.currentTarget.getBoundingClientRect()
-          const value = ((e.clientX - rect.left) / rect.width) * w
+          const matrix = e.currentTarget.getScreenCTM()
+          if (!matrix) return
+          const value = new DOMPoint(e.clientX, e.clientY).matrixTransform(matrix.inverse()).x
           onSelect(
             Math.round(
               Math.max(0, Math.min(maxTime, ((value - left) / (w - left - right)) * maxTime)),

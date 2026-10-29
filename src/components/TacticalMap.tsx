@@ -11,6 +11,7 @@ import {
   type MapPoint,
   type TimedMapPoint,
 } from '../domain/map'
+import { mapZiplines } from '../domain/gameMap'
 import { clock } from './GameUI'
 import './TacticalMap.css'
 
@@ -33,11 +34,17 @@ export type TacticalMapProps = {
   selfTeam?: number
   players: TacticalPlayer[]
   death?: MapPoint
+  deathTime?: number
   trails?: { id: string; points: TimedMapPoint[] }[]
   arrows?: TacticalArrow[]
-  objective?: MapPoint & { label?: string }
+  objective?: MapPoint & { label?: string; destroyed?: boolean }
   coordinateSpace?: 'world' | 'relative'
-  calibration?: { radius: number; imageSrc: string; clientVersion?: number }
+  calibration?: {
+    radius: number
+    imageSrc: string
+    clientVersion?: number
+    basis?: 'date' | 'version'
+  }
   focus?: MapPoint & { radius: number }
   highlightId?: string
 }
@@ -52,6 +59,7 @@ export function TacticalMap({
   selfTeam,
   players,
   death,
+  deathTime,
   trails = [],
   arrows = [],
   objective,
@@ -63,7 +71,7 @@ export function TacticalMap({
   const id = useId().replace(/:/g, '')
   const [focusedId, setFocusedId] = useState<string | null>(null)
   const [failedImage, setFailedImage] = useState<string | null>(null)
-  const [framing, setFraming] = useState<'near' | 'all'>('near')
+  const [framing, setFraming] = useState<'near' | 'all'>(calibration ? 'all' : 'near')
   const fresh = players.filter((p) => isMapPoint(p) && freshMapObservation(p.observedAt, time))
   const omitted = players.length - fresh.length
   const safeDeath = isMapPoint(death) ? death : undefined
@@ -81,20 +89,22 @@ export function TacticalMap({
     failedImage !== imageSrc
   const trailSegments = useMemo(
     () =>
-      trails.flatMap((t) => {
-        const chunks: TimedMapPoint[][] = [[]]
-        for (const p of [...t.points].sort((a, b) => a.time - b.time)) {
-          const state = p as TimedMapPoint & { alive?: boolean; health?: number }
-          // Dead samples are sentinels, not positions. Keep their interruption.
-          if (state.alive === false || state.health === 0 || !isMapPoint(p)) {
-            if (chunks.at(-1)!.length) chunks.push([])
-          } else chunks.at(-1)!.push(p)
-        }
-        return chunks.flatMap((chunk) =>
-          mapTrailSegments(chunk, time).map((points) => ({ id: t.id, points })),
-        )
-      }),
-    [trails, time],
+      trails
+        .filter((t) => t.id === selfId || t.id === focusedId)
+        .flatMap((t) => {
+          const chunks: TimedMapPoint[][] = [[]]
+          for (const p of [...t.points].sort((a, b) => a.time - b.time)) {
+            const state = p as TimedMapPoint & { alive?: boolean; health?: number }
+            // Dead samples are sentinels, not positions. Keep their interruption.
+            if (state.alive === false || state.health === 0 || !isMapPoint(p)) {
+              if (chunks.at(-1)!.length) chunks.push([])
+            } else chunks.at(-1)!.push(p)
+          }
+          return chunks.flatMap((chunk) =>
+            mapTrailSegments(chunk, time).map((points) => ({ id: t.id, points })),
+          )
+        }),
+    [trails, time, selfId, focusedId],
   )
   const points = [
     ...fresh,
@@ -122,6 +132,8 @@ export function TacticalMap({
     visible.find((p) => p.id === focusedId) ??
     visible.find((p) => p.id === highlightId) ??
     visible.find((p) => p.id === selfId)
+  const labelOf = (p: TacticalPlayer) =>
+    p.id === selfId ? 'Vous' : (heroes.find((h) => h.id === p.heroId)?.name ?? p.label)
   const layer = (p: TacticalPlayer) =>
     p.id === focusedId ? 3 : p.id === selfId ? 2 : p.id === highlightId ? 1 : 0
   const drawnPlayers = [...visible].sort((a, b) => layer(a) - layer(b))
@@ -141,9 +153,15 @@ export function TacticalMap({
       data-testid="tactical-map"
     >
       <div className="tactical-map-heading">
-        <span>
+        <span
+          title={
+            geographic
+              ? `City Never Sleeps · version ${calibration?.clientVersion ?? 'inconnue'}${calibration?.basis === 'date' ? ' · patch déduit de la date de la partie' : ''}`
+              : undefined
+          }
+        >
           <MapPin size={14} />
-          {geographic ? 'Carte' : 'Vue relative'}
+          {geographic ? 'Carte de la partie' : 'Vue relative'}
         </span>
         <span className="map-clock">
           <Clock3 size={12} />
@@ -218,7 +236,7 @@ export function TacticalMap({
               </clipPath>
             ))}
           </defs>
-          <rect width={SIZE} height={SIZE} fill="#10170f" />
+          <rect width={SIZE} height={SIZE} fill={geographic ? '#46543c' : '#10170f'} />
           <g clipPath={`url(#${id}-clip)`}>
             {geographic && (
               <image
@@ -227,12 +245,35 @@ export function TacticalMap({
                 y={imageOrigin!.y}
                 width={imageSize}
                 height={imageSize}
-                opacity=".8"
+                opacity="1"
+                className="map-terrain"
                 onError={() => setFailedImage(imageSrc!)}
                 aria-hidden="true"
               />
             )}
-            <rect width={SIZE} height={SIZE} fill={`url(#${id}-grid)`} />
+            {!geographic && <rect width={SIZE} height={SIZE} fill={`url(#${id}-grid)`} />}
+            {geographic &&
+              mapZiplines.map((lane, index) => {
+                const at = (p: number[]) =>
+                  project({ x: lane.origin[0] + p[0], y: lane.origin[1] + p[1] })
+                const first = at(lane.P0_points[0])
+                let d = `M${first.x},${first.y}`
+                for (let i = 1; i < lane.P0_points.length; i++) {
+                  const a = lane.P0_points[i - 1],
+                    b = lane.P0_points[i],
+                    out = lane.P2_points[i - 1],
+                    input = lane.P1_points[i]
+                  const c1 = at([a[0] + out[0], a[1] + out[1]]),
+                    c2 = at([b[0] + input[0], b[1] + input[1]]),
+                    to = at(b)
+                  d += ` C${c1.x},${c1.y} ${c2.x},${c2.y} ${to.x},${to.y}`
+                }
+                return (
+                  <path key={index} d={d} fill="none" stroke={lane.color} className="map-zipline">
+                    <title>Ligne {index + 1}</title>
+                  </path>
+                )
+              })}
             {!geographic && hasPosition && (
               <>
                 <line x1="300" x2="300" y1="0" y2="600" className="map-origin" />
@@ -240,6 +281,7 @@ export function TacticalMap({
               </>
             )}
             {safeFocus &&
+              near &&
               (() => {
                 const center = project(safeFocus)
                 const radius = (safeFocus.radius / (bounds.maxX - bounds.minX)) * SIZE
@@ -274,10 +316,16 @@ export function TacticalMap({
               (() => {
                 const p = project(safeObjective)
                 return (
-                  <g transform={`translate(${p.x} ${p.y})`} className="map-objective">
+                  <g
+                    transform={`translate(${p.x} ${p.y})`}
+                    className={`map-objective ${objective?.destroyed ? 'destroyed' : ''}`}
+                  >
                     <path d="M0-15 15 0 0 15-15 0Z" />
                     <Shield x="-8" y="-8" width="16" height="16" />
-                    <title>{safeObjective.label ?? 'Objectif observé'}</title>
+                    <title>
+                      {safeObjective.label ?? 'Objectif observé'}
+                      {objective?.destroyed ? ' · perdu' : ''}
+                    </title>
                   </g>
                 )
               })()}
@@ -315,7 +363,7 @@ export function TacticalMap({
                   }
                   tabIndex={0}
                   role="button"
-                  aria-label={`${p.label} · relevé à ${clock(p.observedAt)}`}
+                  aria-label={`${labelOf(p)} · relevé à ${clock(p.observedAt)}`}
                   onClick={() => setFocusedId(p.id)}
                   onFocus={() => setFocusedId(p.id)}
                   onKeyDown={(e) => {
@@ -344,7 +392,7 @@ export function TacticalMap({
                   )}
                   <circle className="player-border" r="18" />
                   <title>
-                    {p.label} · {clock(p.observedAt)}
+                    {labelOf(p)} · {clock(p.observedAt)}
                   </title>
                 </g>
               )
@@ -356,7 +404,13 @@ export function TacticalMap({
                   <g transform={`translate(${p.x} ${p.y})`} className="map-death">
                     <circle r="24" />
                     <Skull x="-11" y="-11" width="22" height="22" />
-                    <title>Position enregistrée au décès</title>
+                    <text y="42" textAnchor="middle">
+                      {deathTime !== undefined ? clock(deathTime) : 'Vous'}
+                    </text>
+                    <title>
+                      Position enregistrée au décès
+                      {deathTime !== undefined ? ` · ${clock(deathTime)}` : ''}
+                    </title>
                   </g>
                 )
               })()}

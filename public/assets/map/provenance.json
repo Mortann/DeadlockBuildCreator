@@ -1,0 +1,14 @@
+{
+  "owner": "Valve Corporation (game artwork)",
+  "retrievedAt": "2026-10-29",
+  "files": [
+    {
+      "path": "public/assets/map/midtown-6711.avif",
+      "source": "https://statlocker.gg/images/map/2026-09-29/minimap_midtown_mid.avif",
+      "sha256": "a681f200c7a3334a09f80d51dd3e4bf35cc01c9bc80cb62766222e806bc3b27f",
+      "description": "City Never Sleeps street mask, 29 September 2026; the official API names this layer but its PNG URL returned 403. Public AVIF distribution inspected and compared to API coordinates; no graphical modification."
+    }
+  ],
+  "geometrySource": "https://api.deadlock-api.com/v1/assets/map?client_version=6821",
+  "geometrySha256": "91372f54e86769aaddaee5cc0b9e3cec7aec90e5a09f91088e8a6658c2be6bd1"
+}
