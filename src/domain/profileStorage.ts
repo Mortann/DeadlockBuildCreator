@@ -23,7 +23,7 @@ function validProfile(value: unknown, id: number): value is Profile {
     !!p &&
     p.accountId === id &&
     Array.isArray(p.matches) &&
-    p.matches.length <= 500 &&
+    p.matches.length <= 5000 &&
     typeof p.updatedAt === 'string' &&
     p.matches.every(
       (m) =>
@@ -120,6 +120,7 @@ export function loadProfile(account: number): Promise<Profile | null> {
     return {
       ...newer,
       account: mergeAccountData(older.account, newer.account),
+      historySync: newer.historySync ?? older.historySync,
       matches: mergeMatches(older.matches, newer.matches),
     }
   })

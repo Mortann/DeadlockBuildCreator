@@ -197,6 +197,7 @@ export type Profile = {
   matches: Match[]
   updatedAt: string
   account?: AccountData
+  historySync?: { source: 'steam' | 'stored' | 'unknown'; fetchedAt: string; limited: boolean }
 }
 export type PersonalModel = {
   matches: number

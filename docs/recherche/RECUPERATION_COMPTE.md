@@ -8,6 +8,8 @@ La partie fournie en capture était effectivement récupérable depuis le cache 
 
 ## Origines des informations manquantes
 
+Complément : la vérification suivante a confirmé que l’historique du compte s’arrête toujours au 25 octobre avec `Called-Steam: false` et sans envoi récent du cache. La connexion OpenID identifie le compte sans donner accès aux replays. Le nouveau diagnostic, la connexion Steam vérifiée, l’import local des références du cache et les limites du fournisseur sont détaillés dans [SYNCHRONISATION.md](../SYNCHRONISATION.md).
+
 1. **Catalogue de présentation limité à quatre héros.** La review utilisait les quatre héros du modèle de combat. Elle dispose désormais d’un catalogue de présentation distinct : 65 identités et 62 portraits disponibles depuis l’API d’assets. Le laboratoire de combat reste limité aux héros dont le modèle existe ; un héros reconnu dans l’historique n’est pas simulé avec les caractéristiques d’un autre.
 2. **Sentinelle valide `time_to_kill_s: -1`.** Elle signifie ici que cette mesure n’est pas disponible. Elle n’invalide ni le décès ni ses autres mesures.
 3. **Tableaux cumulatifs de combat plus courts que l’horloge globale.** Ce format existe dans les réponses réelles. Le dernier élément peut servir de total (usage corroboré par le décodeur Deadlock+). L’alignement temporel de ces tableaux n’est pas documenté : ils conservent leur total et leur caractère non aligné, sans timestamps fabriqués. Les séries réinitialisées ou trop longues restent rejetées. Une anomalie de matrice n’invalide plus les compteurs personnels indépendants.
@@ -30,6 +32,8 @@ Les pages et scripts publics de documentation ont été consultés, ainsi que le
 ## Routes intégrées
 
 - `GET /api/players/:id/history` : historique disponible, sans fabrication des parties absentes.
+- `GET /api/auth/steam/start`, `/callback`, `/result` : identification Steam OpenID vérifiée côté serveur, sans session Steam du joueur.
+- `POST /api/matches/cache` : références numériques extraites localement du dossier choisi par le joueur ; aucun fichier du cache n’est envoyé.
 - `GET /api/players/:id/profile` : Steam public (nom/lien seulement), statistiques des héros en mode standard, rang et état de collecte. Les sous-requêtes sont indépendantes : l’échec du rang ne supprime pas l’historique. La liste d’amis et le nom réel ne sont ni renvoyés au navigateur ni enregistrés dans le profil.
 - `POST /api/players/:id/refresh` : `force_refetch=true`, une fois par heure depuis l’application. La couverture reste celle accordée par Steam et le service ; cela ne garantit pas une archive exhaustive.
 - `GET /api/matches/:id` : métadonnées disponibles en cache/S3, `disable_steam=true`.

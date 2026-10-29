@@ -111,3 +111,235 @@
   text-overflow: ellipsis;
   white-space: nowrap;
 }
+.steam-connect {
+  width: 100%;
+  min-height: 50px;
+  justify-content: center;
+  background: #243746;
+  border-color: #7094a750;
+  color: #e4f0f3;
+  text-decoration: none;
+}
+.account-connection summary {
+  cursor: pointer;
+  color: #a2b28c;
+  font-size: 12px;
+  padding: 12px 0;
+}
+.account-connection[open] summary {
+  margin-bottom: 10px;
+}
+.steam-connect.disabled {
+  opacity: 0.5;
+  pointer-events: none;
+}
+.steam-connect > svg:last-child {
+  margin-left: auto;
+}
+.steam-connect-note {
+  text-align: center;
+  color: #9cae9e;
+  font-size: 10px;
+  margin: 10px 0 25px;
+}
+.sync-diagnostic {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 18px 12px;
+  margin-top: 22px;
+  padding: 16px;
+  background: #27332275;
+  border: 1px solid #adc29128;
+}
+.sync-diagnostic > div {
+  display: flex;
+  flex-direction: column;
+  gap: 7px;
+  min-width: 0;
+}
+.sync-diagnostic span {
+  font-size: 10px;
+  color: #9ead8e;
+}
+.sync-diagnostic strong {
+  font-size: 12px;
+  color: #e4e8c9;
+  font-weight: 500;
+}
+.sync-note,
+.sync-result {
+  font-size: 11px;
+  color: #e3bf88;
+  padding: 12px 0 0;
+}
+.sync-result {
+  color: #c3dba0;
+}
+.primary-sync-actions {
+  margin-bottom: 20px;
+  justify-content: flex-start;
+}
+.primary-sync-actions .button {
+  font-size: 12px;
+}
+.cache-sync {
+  border: 1px solid #b7c49435;
+  padding: 18px;
+  margin: 20px 0;
+  background: #141d12;
+}
+.cache-sync > header {
+  display: flex;
+  gap: 12px;
+  align-items: center;
+  color: #c8d8ae;
+}
+.cache-sync > header div {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+.cache-sync > header strong {
+  font-family: Oracle, Georgia, serif;
+  font-size: 19px;
+}
+.cache-sync > header small {
+  color: #94a383;
+  font-size: 11px;
+}
+.cache-steps {
+  padding-left: 18px;
+  margin: 18px 0;
+  color: #cdd6be;
+  font-size: 12px;
+  line-height: 1.7;
+}
+.cache-steps li + li {
+  margin-top: 8px;
+}
+.cache-steps code {
+  color: #e5c997;
+  font-size: 11px;
+  overflow-wrap: anywhere;
+}
+.cache-privacy {
+  color: #97a68c;
+  font-size: 11px;
+  line-height: 1.6;
+  margin: 14px 0;
+}
+.cache-help {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  color: #abbc98;
+  font-size: 11px;
+  margin-top: 18px;
+}
+.cache-progress {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 12px;
+  color: #cadbb0;
+  margin: 18px 0;
+}
+.cache-progress progress {
+  width: 100px;
+  accent-color: #c4d49f;
+}
+.cache-selection-heading {
+  display: flex;
+  flex-direction: column;
+  gap: 7px;
+  margin: 18px 0 10px;
+}
+.cache-selection-heading strong {
+  font-size: 13px;
+  color: #d3dfbb;
+}
+.cache-selection-heading span {
+  font-size: 10px;
+  color: #a4ae93;
+}
+.cache-reference-list {
+  margin-bottom: 15px;
+}
+.cache-reference-list label {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  font-size: 12px;
+  padding: 8px 0;
+  border-bottom: 1px solid #b7c49418;
+  color: #c7d3b5;
+}
+.cache-reference-list input {
+  accent-color: #b8d08d;
+  width: 15px;
+  height: 15px;
+}
+.cache-pagination {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+  align-items: center;
+  margin: 12px 0;
+  font-size: 11px;
+  color: #99ac83;
+}
+.cache-pagination .text-button {
+  font-size: 11px;
+}
+.cache-results {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin: 18px 0;
+}
+.cache-results > strong {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  font-size: 12px;
+  margin-bottom: 6px;
+  color: #d1e4b2;
+}
+.cache-results > div {
+  display: flex;
+  justify-content: space-between;
+  gap: 10px;
+  font-size: 11px;
+  color: #bdc8ae;
+}
+.cache-results small {
+  font-size: 10px;
+  color: #d2b37e;
+}
+.cache-results .ready {
+  color: #b5d49b;
+}
+.cache-results .other {
+  color: #91a28a;
+}
+.library-sync {
+  display: flex;
+  gap: 7px;
+  align-items: center;
+  margin-top: 10px;
+  font-size: 11px;
+  color: #c0d1a7;
+}
+.library-sync small {
+  color: #8a9b7a;
+  margin-left: 8px;
+  font-size: 10px;
+}
+@media (max-width: 760px) {
+  .library-sync {
+    margin-top: 8px;
+  }
+  .library-sync small {
+    display: none;
+  }
+}

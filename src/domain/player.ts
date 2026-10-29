@@ -709,7 +709,7 @@ export function mergeMatches(existing: Match[], incoming: Match[]): Match[] {
       ],
     } as Match)
   }
-  return [...map.values()].sort((a, b) => b.startTime - a.startTime).slice(0, 500)
+  return [...map.values()].sort((a, b) => b.startTime - a.startTime).slice(0, 5000)
 }
 
 /** Supports API history arrays, a raw metadata object, or {account_id, matches, metadata}. */
@@ -741,8 +741,8 @@ export function importPlayerData(
     throw new Error(
       'Ce fichier appartient à un autre compte. Changez le compte ou choisissez un autre fichier.',
     )
-  if (history.length > 500 || metadata.length > 100)
-    throw new Error('Import limité à 500 matchs et 100 métadonnées par fichier.')
+  if (history.length > 5000 || metadata.length > 100)
+    throw new Error('Import limité à 5 000 matchs et 100 métadonnées par fichier.')
   const summaries = history
     .map((h) => parseHistory(h, accountId, source))
     .filter((m): m is Match => m !== null)
@@ -750,7 +750,7 @@ export function importPlayerData(
     .map((m) => parseMetadata(m, accountId, source))
     .filter((m): m is Match => m !== null)
   const matches = mergeMatches(summaries, details)
-  if (!matches.length)
+  if (!matches.length && !(source === 'api' && Array.isArray(raw) && raw.length === 0))
     throw new Error(
       'Aucune partie compatible pour ce compte. Utilisez un historique ou des métadonnées JSON de Deadlock API.',
     )

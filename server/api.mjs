@@ -1,3 +1,6 @@
+import { steamMiddleware } from './steam.mjs'
+import { cacheUploadMiddleware } from './cache-upload.mjs'
+
 const cache = new Map()
 const inflight = new Map()
 const recoveryAttempts = []
@@ -46,7 +49,10 @@ function remember(key, payload) {
   deleteCached(key)
   while (cache.size >= 100 || cacheBytes + payload.bytes > CACHE_LIMIT)
     deleteCached(cache.keys().next().value)
-  cache.set(key, { ...payload, until: Date.now() + 600000 })
+  cache.set(key, {
+    ...payload,
+    until: Date.now() + (key.includes('/match-history') ? 30000 : 600000),
+  })
   cacheBytes += payload.bytes
 }
 
@@ -63,7 +69,9 @@ async function upstreamJson(path, timeout = 30000, refresh = false) {
         ...(process.env.DEADLOCK_API_KEY ? { 'X-API-Key': process.env.DEADLOCK_API_KEY } : {}),
       },
     })
-    if (!response.ok) {
+    const historyFallback =
+      response.status === 429 && path.includes('/match-history') && !path.includes('force_refetch')
+    if (!response.ok && !historyFallback) {
       const retryAfter = Number(response.headers.get('retry-after'))
       await response.body?.cancel()
       throw Object.assign(new Error('upstream'), {
@@ -73,7 +81,17 @@ async function upstreamJson(path, timeout = 30000, refresh = false) {
       })
     }
     const payload = await readBounded(response)
-    JSON.parse(payload.text)
+    const parsed = JSON.parse(payload.text)
+    if (historyFallback && !Array.isArray(parsed))
+      throw Object.assign(new Error('upstream'), {
+        status: 429,
+        retryAfter: Number(response.headers.get('retry-after')) || undefined,
+      })
+    payload.fetchedAt = new Date().toISOString()
+    const called = response.headers.get('called-steam')
+    payload.historySource = called === 'true' ? 'steam' : called === 'false' ? 'stored' : 'unknown'
+    payload.limited = historyFallback
+    payload.retryAfter = Number(response.headers.get('retry-after')) || undefined
     remember(path, payload)
     return payload
   })()
@@ -88,6 +106,8 @@ async function upstreamJson(path, timeout = 30000, refresh = false) {
 export async function apiMiddleware(req, res, next) {
   const url = new URL(req.url || '/', 'http://localhost')
   if (!url.pathname.startsWith('/api/')) return next()
+  if (url.pathname.startsWith('/api/auth/steam/')) return steamMiddleware(req, res, next)
+  if (url.pathname === '/api/matches/cache') return cacheUploadMiddleware(req, res)
   res.setHeader('Content-Type', 'application/json; charset=utf-8')
   res.setHeader('Cache-Control', 'no-store')
   res.setHeader('X-Content-Type-Options', 'nosniff')
@@ -96,6 +116,12 @@ export async function apiMiddleware(req, res, next) {
     res.end(JSON.stringify(value))
   }
   const replyPayload = (payload) => {
+    if (history) {
+      res.setHeader('X-Deadlock-History-Source', payload.historySource ?? 'unknown')
+      res.setHeader('X-Deadlock-Fetched-At', payload.fetchedAt)
+      res.setHeader('X-Deadlock-History-Limited', String(!!payload.limited))
+      if (payload.retryAfter) res.setHeader('Retry-After', String(payload.retryAfter))
+    }
     res.statusCode = 200
     res.end(payload.text)
   }
@@ -104,6 +130,17 @@ export async function apiMiddleware(req, res, next) {
   const metadata = url.pathname.match(/^\/api\/matches\/([^/]+)(\/recover)?$/)
   const validAccount = (id) => integer.test(id) && BigInt(id) <= 4294967295n
   const mutation = !!metadata?.[2] || history?.[2] === 'refresh'
+  if (
+    mutation &&
+    (req.headers['sec-fetch-site'] === 'cross-site' ||
+      (req.headers.origin &&
+        ![
+          process.env.APP_ORIGIN,
+          `http://${req.headers.host}`,
+          `https://${req.headers.host}`,
+        ].includes(req.headers.origin)))
+  )
+    return reply(403, { error: 'Origine non autorisée.' })
   if (req.method !== (mutation ? 'POST' : 'GET'))
     return reply(405, { error: 'Méthode non autorisée.' })
   let path

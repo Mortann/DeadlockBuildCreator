@@ -6,6 +6,7 @@ import {
   Link2,
   LoaderCircle,
   LockKeyhole,
+  LogIn,
   RefreshCw,
   Trash2,
   Upload,
@@ -14,44 +15,10 @@ import { accountIdFromInput, importPlayerData } from '../domain/player'
 import type { Profile } from '../domain/types'
 import { HeroPortrait, Modal, number } from './GameUI'
 import { heroIdentity } from '../domain/heroRoster'
-import { readAccountData } from '../domain/account'
+import { getJson } from '../domain/api'
+import { syncProfile } from '../domain/profileSync'
+import { CacheSync } from './CacheSync'
 import './ProfileData.css'
-
-export class ApiError extends Error {
-  constructor(
-    message: string,
-    public status: number,
-    public code?: string,
-    public recoverable = false,
-    public retryAfter?: number,
-  ) {
-    super(message)
-  }
-}
-export async function getJson(
-  path: string,
-  options: { method?: 'GET' | 'POST'; timeout?: number } = {},
-): Promise<unknown> {
-  const response = await fetch(path, {
-    method: options.method ?? 'GET',
-    signal: AbortSignal.timeout(options.timeout ?? 35000),
-  })
-  let data
-  try {
-    data = await response.json()
-  } catch {
-    throw new ApiError('Réponse API illisible.', response.status)
-  }
-  if (!response.ok)
-    throw new ApiError(
-      typeof data.error === 'string' ? data.error : 'La requête a échoué.',
-      response.status,
-      data.code,
-      data.recoverable,
-      Number(response.headers.get('retry-after')) || undefined,
-    )
-  return data
-}
 
 export function PlayerDialog({
   profile,
@@ -66,9 +33,11 @@ export function PlayerDialog({
 }) {
   const file = useRef<HTMLInputElement>(null)
   const request = useRef(0)
+  const operation = useRef<AbortController | null>(null)
   useEffect(
     () => () => {
       request.current++
+      operation.current?.abort()
     },
     [],
   )
@@ -76,28 +45,63 @@ export function PlayerDialog({
   const [account, setAccount] = useState(profile ? String(profile.accountId) : '')
   const [busy, setBusy] = useState(false),
     [error, setError] = useState('')
-  async function connect(force = false) {
+  const [syncResult, setSyncResult] = useState('')
+  const [cacheOpen, setCacheOpen] = useState(false)
+  const [steamReturn] = useState(() => new URLSearchParams(location.search).get('steam'))
+  useEffect(() => {
+    if (!steamReturn) return
+    const url = new URL(location.href)
+    url.searchParams.delete('steam')
+    history.replaceState(null, '', url.pathname + url.search + url.hash)
+    if (steamReturn !== 'connected') {
+      setError(
+        steamReturn === 'cancelled'
+          ? 'Connexion Steam annulée.'
+          : 'Connexion Steam non validée. Réessayez.',
+      )
+      return
+    }
+    const controller = new AbortController()
+    operation.current = controller
+    setBusy(true)
+    void getJson('/api/auth/steam/result', { signal: controller.signal })
+      .then(async (raw) => {
+        if (controller.signal.aborted) return
+        const id = (raw as { accountId?: number }).accountId
+        if (!Number.isInteger(id) || !id || id < 1 || id > 4294967295)
+          throw new Error('Compte Steam invalide.')
+        setAccount(String(id))
+        await connect(false, false, id)
+      })
+      .catch((e) => {
+        if (!controller.signal.aborted) {
+          setError(e instanceof Error ? e.message : 'Connexion Steam impossible.')
+          setBusy(false)
+        }
+      })
+    return () => controller.abort()
+  }, [steamReturn])
+  async function connect(force = false, close = true, explicitId?: number) {
+    operation.current?.abort()
+    const controller = new AbortController()
+    operation.current = controller
     const token = ++request.current
     setError('')
+    setSyncResult('')
     setBusy(true)
     try {
-      const id = accountIdFromInput(account)
-      const data = await getJson(
-        `/api/players/${id}/${force ? 'refresh' : 'history'}`,
-        force ? { method: 'POST', timeout: 95000 } : {},
-      )
-      const imported = importPlayerData(data, id, 'api')
-      try {
-        imported.account = readAccountData(
-          await getJson(`/api/players/${id}/profile`, { timeout: 12000 }),
-          id,
-        )
-      } catch {
-        /* A missing public profile must not discard available matches. */
-      }
+      const id = explicitId ?? accountIdFromInput(account)
+      const imported = await syncProfile(id, force, controller.signal)
       if (token !== request.current) return
+      const known = new Set(profile?.accountId === id ? profile.matches.map((m) => m.id) : [])
+      const added = imported.matches.filter((m) => !known.has(m.id)).length
       onImport(imported)
-      onClose()
+      setSyncResult(
+        added
+          ? `${added} nouvelle${added > 1 ? 's' : ''} partie${added > 1 ? 's' : ''}`
+          : 'Aucune nouvelle partie dans la source',
+      )
+      if (close) onClose()
     } catch (e) {
       if (token === request.current)
         setError(e instanceof Error ? e.message : 'Connexion impossible.')
@@ -107,6 +111,7 @@ export function PlayerDialog({
   }
   async function readFile(selected?: File) {
     if (!selected) return
+    operation.current?.abort()
     const token = ++request.current
     setError('')
     setBusy(true)
@@ -120,45 +125,147 @@ export function PlayerDialog({
       onImport(imported)
       onClose()
     } catch (e) {
-      setError(e instanceof Error ? e.message : 'Fichier incompatible.')
+      if (token === request.current)
+        setError(e instanceof Error ? e.message : 'Fichier incompatible.')
     } finally {
-      setBusy(false)
+      if (token === request.current) setBusy(false)
       if (file.current) file.current.value = ''
     }
   }
   return (
     <Modal title="Mes données" onClose={onClose} className="player-dialog">
-      <div className="account-emblem">
-        <Database size={34} />
-      </div>
-      <form
-        onSubmit={(e) => {
-          e.preventDefault()
-          void connect()
-        }}
-      >
-        <label htmlFor="account-id" className="field-label">
-          Account ID ou SteamID64
-        </label>
-        <div className="connect-row">
-          <input
-            id="account-id"
-            placeholder="Identifiant ou lien du profil Steam"
-            value={account}
-            onChange={(e) => setAccount(e.target.value)}
-            autoComplete="off"
-          />
-          <button className="button primary" disabled={busy || !account.trim()}>
-            {busy ? <LoaderCircle size={15} className="spin" /> : <Link2 size={15} />}Charger
-          </button>
+      {error && (
+        <div className="error-box" role="alert">
+          {error}
         </div>
-      </form>
+      )}
+      {!profile && (
+        <div className="account-emblem">
+          <Database size={34} />
+        </div>
+      )}
+      <details className="account-connection" open={!profile}>
+        <summary>{profile ? 'Changer de compte' : 'Connecter mon compte'}</summary>
+        <a
+          className={`button steam-connect ${busy ? 'disabled' : ''}`}
+          aria-disabled={busy}
+          href={busy ? undefined : '/api/auth/steam/start'}
+        >
+          <LogIn size={19} />
+          Se connecter avec Steam
+          <ArrowUpRight size={15} />
+        </a>
+        <p className="steam-connect-note">
+          Identifie votre compte · les replays restent à synchroniser
+        </p>
+        <form
+          onSubmit={(e) => {
+            e.preventDefault()
+            void connect()
+          }}
+        >
+          <label htmlFor="account-id" className="field-label">
+            Account ID ou SteamID64
+          </label>
+          <div className="connect-row">
+            <input
+              id="account-id"
+              placeholder="Identifiant ou lien du profil Steam"
+              value={account}
+              onChange={(e) => setAccount(e.target.value)}
+              autoComplete="off"
+            />
+            <button className="button primary" disabled={busy || !account.trim()}>
+              {busy ? <LoaderCircle size={15} className="spin" /> : <Link2 size={15} />}Charger
+            </button>
+          </div>
+        </form>
+      </details>
       {profile && (
         <section className="account-summary" aria-label="Informations du compte">
           <div className="account-summary-heading">
             <strong>{profile.account?.name ?? `Compte ${profile.accountId}`}</strong>
             <span>{number(profile.matches.length)} parties disponibles</span>
           </div>
+          <div className="sync-diagnostic" aria-label="État de la synchronisation">
+            <div>
+              <span>Dernière partie disponible</span>
+              <strong>
+                {profile.matches.length
+                  ? new Intl.DateTimeFormat('fr-FR', {
+                      day: 'numeric',
+                      month: 'short',
+                      hour: '2-digit',
+                      minute: '2-digit',
+                    }).format(Math.max(...profile.matches.map((m) => m.startTime)) * 1000)
+                  : 'Aucune'}
+              </strong>
+            </div>
+            <div>
+              <span>Source de l’historique</span>
+              <strong>
+                {profile.historySync?.source === 'steam'
+                  ? 'Steam consulté'
+                  : profile.historySync?.source === 'stored'
+                    ? 'Base communautaire'
+                    : 'Non confirmée'}
+              </strong>
+            </div>
+            <div>
+              <span>Dernière vérification</span>
+              <strong>
+                {profile.historySync
+                  ? new Intl.DateTimeFormat('fr-FR', {
+                      day: 'numeric',
+                      month: 'short',
+                      hour: '2-digit',
+                      minute: '2-digit',
+                    }).format(new Date(profile.historySync.fetchedAt))
+                  : '—'}
+              </strong>
+            </div>
+            <div>
+              <span>Détails chargés</span>
+              <strong>
+                {profile.matches.filter((m) => m.stats.length > 0).length} /{' '}
+                {profile.matches.length}
+              </strong>
+            </div>
+          </div>
+          {profile.historySync?.limited && (
+            <div className="sync-note">Quota atteint · historique disponible conservé</div>
+          )}
+          {syncResult && (
+            <div className="sync-result" role="status">
+              {syncResult}
+            </div>
+          )}
+          <div className="account-sync-actions primary-sync-actions">
+            <button
+              className="button primary"
+              disabled={busy}
+              onClick={() => void connect(false, false, profile.accountId)}
+            >
+              <RefreshCw size={14} className={busy ? 'spin' : ''} />
+              Actualiser
+            </button>
+            <button
+              className="button"
+              disabled={busy}
+              aria-expanded={cacheOpen}
+              onClick={() => setCacheOpen((v) => !v)}
+            >
+              Parties manquantes
+            </button>
+          </div>
+          {cacheOpen && (
+            <CacheSync
+              key={profile.accountId}
+              accountId={profile.accountId}
+              onImport={onImport}
+              onRefresh={() => void connect(false, false, profile.accountId)}
+            />
+          )}
           <div className="account-metrics">
             <div>
               <strong>
@@ -197,16 +304,18 @@ export function PlayerDialog({
             </div>
           )}
           <div className="account-sync-actions">
-            <button
-              className="text-button"
-              disabled={busy}
-              onClick={() => void connect(true)}
-              title="Interroger l’historique Steam via Deadlock API ; quota limité à une fois par heure."
-            >
-              <RefreshCw size={13} /> Actualiser via Steam
-            </button>
+            {profile.historySync?.source !== 'stored' && (
+              <button
+                className="text-button"
+                disabled={busy}
+                onClick={() => void connect(true, false, profile.accountId)}
+                title="Demander une relecture complète au fournisseur. Steam n’est consulté que si votre compte est ami avec l’un de ses bots ; quota d’une demande par heure."
+              >
+                <RefreshCw size={13} /> Relecture complète · 1 / h
+              </button>
+            )}
             <a href="https://deadlock-api.com/ingest-cache" target="_blank" rel="noreferrer">
-              Parties manquantes <ArrowUpRight size={13} />
+              Collecte automatique <ArrowUpRight size={13} />
             </a>
           </div>
         </section>
@@ -232,11 +341,6 @@ export function PlayerDialog({
         accept=".json,application/json"
         onChange={(e) => void readFile(e.target.files?.[0])}
       />
-      {error && (
-        <div className="error-box" role="alert">
-          {error}
-        </div>
-      )}
       <div
         className="privacy-note"
         title="Les imports restent dans ce navigateur. Le chargement en ligne transmet votre identifiant à Deadlock API."

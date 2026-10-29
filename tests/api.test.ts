@@ -147,6 +147,50 @@ describe('server-side upstream boundary', () => {
 })
 
 describe('account completion and explicit metadata recovery', () => {
+  it('retains usable history returned with a 429 and exposes its source and quota status', async () => {
+    vi.stubGlobal(
+      'fetch',
+      vi.fn(
+        async () =>
+          new Response('[{"match_id":123}]', {
+            status: 429,
+            headers: { 'Called-Steam': 'false', 'Retry-After': '120' },
+          }),
+      ),
+    )
+    const base = await serverForTest(),
+      response = await realFetch(base + '/api/players/42/history')
+    expect(response.status).toBe(200)
+    expect(await response.json()).toEqual([{ match_id: 123 }])
+    expect(response.headers.get('x-deadlock-history-source')).toBe('stored')
+    expect(response.headers.get('x-deadlock-history-limited')).toBe('true')
+    expect(response.headers.get('retry-after')).toBe('120')
+    expect(response.headers.get('x-deadlock-fetched-at')).toBeTruthy()
+  })
+  it('does not mistake a 429 error object for match history', async () => {
+    vi.stubGlobal(
+      'fetch',
+      vi.fn(async () => new Response('{"error":"limited"}', { status: 429 })),
+    )
+    const base = await serverForTest()
+    expect((await realFetch(base + '/api/players/42/history')).status).toBe(429)
+  })
+  it('expires local history after 30 seconds instead of serving it for ten minutes', async () => {
+    const upstream = vi.fn(async () => new Response('[]', { headers: { 'Called-Steam': 'true' } }))
+    vi.stubGlobal('fetch', upstream)
+    const base = await serverForTest(),
+      now = Date.now()
+    const clock = vi.spyOn(Date, 'now').mockReturnValue(now)
+    try {
+      await realFetch(base + '/api/players/42/history')
+      clock.mockReturnValue(now + 31000)
+      const response = await realFetch(base + '/api/players/42/history')
+      expect(response.headers.get('x-deadlock-history-source')).toBe('steam')
+      expect(upstream).toHaveBeenCalledTimes(2)
+    } finally {
+      clock.mockRestore()
+    }
+  })
   it('recovers on demand and makes the recovered metadata available to ordinary cached reads', async () => {
     const upstream = vi.fn(async (url: string) =>
       url.endsWith('disable_steam=false')
@@ -216,5 +260,66 @@ describe('account completion and explicit metadata recovery', () => {
     expect(upstream.mock.calls[0][0]).toMatch(/force_refetch=true$/)
     expect(upstream.mock.calls[0][1]?.headers).toMatchObject({ 'X-API-Key': 'test-only-key' })
     expect((await realFetch(base + '/api/players/42/refresh', { method: 'POST' })).status).toBe(429)
+  })
+})
+
+describe('explicit sanitized replay reference upload', () => {
+  it('accepts numeric references only, uses a fixed destination and never forwards cache files or user metadata', async () => {
+    const upstream = vi.fn(async () => new Response('{"status":"success","salts_ingested":1}'))
+    vi.stubGlobal('fetch', upstream)
+    const base = await serverForTest()
+    const response = await realFetch(base + '/api/matches/cache', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify([{ match_id: 123, cluster_id: 404, metadata_salt: 456 }]),
+    })
+    expect(response.status).toBe(200)
+    expect(await response.json()).toEqual({ accepted: 1 })
+    expect((upstream.mock.calls[0] as unknown as [string])[0]).toBe(
+      'https://api.deadlock-api.com/v1/matches/salts',
+    )
+    const options = (upstream.mock.calls[0] as unknown as [string, RequestInit])[1]
+    expect(JSON.parse(options.body as string)).toEqual([
+      { match_id: 123, cluster_id: 404, metadata_salt: 456, username: 'Deadlock Atelier' },
+    ])
+  })
+  it('blocks cross-site requests, files, arbitrary URLs, extra properties and oversized uploads before fetching', async () => {
+    const upstream = vi.fn()
+    vi.stubGlobal('fetch', upstream)
+    const base = await serverForTest()
+    for (const body of [
+      [],
+      [{ match_id: 123, cluster_id: 404, metadata_salt: 456, url: 'https://example.com' }],
+      [{ match_id: 123, cluster_id: 404, metadata_salt: 4294967296 }],
+      { file: 'secret' },
+    ])
+      expect(
+        (
+          await realFetch(base + '/api/matches/cache', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(body),
+          })
+        ).status,
+      ).toBe(400)
+    expect(
+      (
+        await realFetch(base + '/api/matches/cache', {
+          method: 'POST',
+          headers: { Origin: 'https://example.com', 'Content-Type': 'application/json' },
+          body: '[]',
+        })
+      ).status,
+    ).toBe(403)
+    expect(
+      (
+        await realFetch(base + '/api/matches/cache', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: ' '.repeat(65537),
+        })
+      ).status,
+    ).toBe(413)
+    expect(upstream).not.toHaveBeenCalled()
   })
 })

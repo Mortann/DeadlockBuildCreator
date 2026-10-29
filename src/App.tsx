@@ -175,9 +175,13 @@ export default function App() {
   const profileAction = useRef(0)
   const currentProfile = useRef(profile)
   currentProfile.current = profile
-  const [page, setPage] = useState<'lab' | 'review'>('lab'),
+  const [page, setPage] = useState<'lab' | 'review'>(() =>
+      new URLSearchParams(location.search).has('steam') ? 'review' : 'lab',
+    ),
     [tab, setTab] = useState<'build' | 'compare'>('build')
-  const [playerOpen, setPlayerOpen] = useState(false),
+  const [playerOpen, setPlayerOpen] = useState(() =>
+      new URLSearchParams(location.search).has('steam'),
+    ),
     [infoOpen, setInfoOpen] = useState(false),
     [inspected, setInspected] = useState<Item | null>(null)
   const [category, setCategory] = useState<Category | 'all'>('all'),
@@ -289,6 +293,7 @@ export default function App() {
       const next = {
         ...incoming,
         account: mergeAccountData(previous?.account, incoming.account),
+        historySync: incoming.historySync ?? previous?.historySync,
         matches: mergeMatches(previous?.matches ?? [], incoming.matches),
       }
       currentProfile.current = next

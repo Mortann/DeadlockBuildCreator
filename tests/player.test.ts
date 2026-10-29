@@ -11,6 +11,14 @@ import {
 import { bundle, metadata, summary } from './fixtures'
 
 describe('identity and API imports', () => {
+  it('allows an empty API history without manufacturing matches and supports histories above 500 entries', () => {
+    expect(importPlayerData([], 42, 'api').matches).toEqual([])
+    expect(() => importPlayerData([], 42)).toThrow()
+    const matches = Array.from({ length: 620 }, (_, i) =>
+      summary({ match_id: 123000 + i, start_time: 1792497600 + i * 3600 }),
+    )
+    expect(importPlayerData(matches, 42, 'api').matches).toHaveLength(620)
+  })
   it('converts SteamID64 without floating point precision loss', () => {
     expect(accountIdFromInput('76561197960265770')).toBe(42)
     expect(accountIdFromInput('42')).toBe(42)

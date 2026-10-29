@@ -46,7 +46,7 @@ import { reviewSlides, currentSlide } from '../domain/reviewSlides'
 import { matchMap, mapObjective } from '../domain/gameMap'
 import { heroIdentity } from '../domain/heroRoster'
 import { useReviewAnalysis } from '../hooks/useReviewAnalysis'
-import { ApiError, getJson } from './PlayerDialog'
+import { ApiError, getJson } from '../domain/api'
 import { HeroPortrait, ItemArt, clock, number, shortNumber } from './GameUI'
 import { MatchChart } from './MatchChart'
 import { TacticalMap, type TacticalArrow } from './TacticalMap'
@@ -1029,6 +1029,17 @@ export function Review({
             <div>
               <span className="eyebrow">Votre historique</span>
               <h2>{profile.account?.name ?? `Compte ${profile.accountId}`}</h2>
+              <button
+                className="text-button library-sync"
+                aria-label="Synchroniser"
+                onClick={onConnect}
+              >
+                <RefreshCw size={12} />
+                <span>Synchroniser</span>
+                {matches.length > 0 && (
+                  <small>Dernière partie · {date(matches[0].startTime)}</small>
+                )}
+              </button>
             </div>
             <div className="library-numbers">
               <span>
