@@ -1,0 +1,113 @@
+.account-summary {
+  margin: 24px 0 6px;
+  border-top: 1px solid #ffefd720;
+  padding-top: 20px;
+}
+.account-summary-heading {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+.account-summary-heading strong {
+  font-family: Oracle, Georgia, serif;
+  font-size: 24px;
+}
+.account-summary-heading > span {
+  font-size: 11px;
+  color: #9aa88c;
+}
+.account-metrics {
+  display: flex;
+  gap: 15px;
+  margin: 20px 0;
+}
+.account-metrics > div {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 7px;
+  border-left: 2px solid #8ca76d;
+  padding-left: 10px;
+}
+.account-metrics strong {
+  font-size: 17px;
+  color: #d4e3b9;
+}
+.account-metrics span {
+  font-size: 10px;
+  color: #8e9d80;
+}
+.account-heroes {
+  max-height: 320px;
+  overflow: auto;
+}
+.account-heroes > div {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 8px 0;
+  border-top: 1px solid #ffefd710;
+}
+.account-heroes span {
+  font-size: 12px;
+}
+.account-heroes small {
+  font-size: 10px;
+  color: #8b9b7c;
+  margin-left: auto;
+}
+.account-heroes strong {
+  font-size: 14px;
+  color: #c6d9af;
+  min-width: 40px;
+  text-align: right;
+}
+.account-sync-actions {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  margin-top: 20px;
+  flex-wrap: wrap;
+}
+.account-sync-actions .text-button,
+.account-sync-actions a {
+  font-size: 11px;
+  color: #aebe9b;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
+.player-dialog {
+  max-height: 90dvh;
+  overflow: auto;
+}
+.reference-problems {
+  font-size: 11px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  color: #b9a278;
+  padding: 0 0 12px;
+}
+.reference-problems a {
+  margin-left: auto;
+  color: #bdcda6;
+}
+.metadata-recovery {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+.metadata-recovery a {
+  color: #bdcda6;
+  font-size: 11px;
+}
+
+.profile-button span {
+  max-width: 180px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}

@@ -1,0 +1,8 @@
+node_modules
+dist
+public/assets
+src/data/snapshot.json
+package-lock.json
+test-results
+playwright-report
+docs/recherche
