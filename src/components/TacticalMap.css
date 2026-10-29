@@ -275,3 +275,23 @@
     transition: none !important;
   }
 }
+.map-health > rect {
+  fill: #0b120be6;
+  stroke: #111a0d;
+  stroke-width: 1px;
+}
+.map-health .map-health-value {
+  fill: #b8d89a;
+  stroke: none;
+}
+.map-health.low .map-health-value {
+  fill: #e6c47d;
+}
+.map-health.critical .map-health-value {
+  fill: #ee9476;
+}
+.map-selected-health {
+  color: #c2d79f;
+  font-size: 10px;
+  font-variant-numeric: tabular-nums;
+}

@@ -34,6 +34,8 @@ Avant → Moment → Suite partage un curseur avec la chronologie. « Suite » v
 
 Les positions sont observées, jamais extrapolées. Âge maximal d’affichage 12 s, traces sur 24 s, rupture aux trous >12 s et aux décès. Les échantillons morts invalident les derniers points vivants ; leurs coordonnées sentinelles ne sont jamais affichées. Les positions du tueur ne sont introduites qu’à leur horodatage exact, jamais dans « Avant ». Un décès antérieur peut rester marqué comme événement historique, avec son heure, sans devenir une position vivante. Les flèches relient deux relevés successifs ; elles ne sont pas des routes praticables calculées.
 
+Les portraits sur la carte affichent les PV en pourcentage lorsque l’échantillon les fournit. Cette valeur conserve l’heure et la fraîcheur de la position ; un champ manquant ne devient pas une barre pleine. Le panneau du personnage sélectionné affiche son nom reconnu, ses PV et l’âge du relevé.
+
 La vue proche recentre sur la position connue du joueur ou son décès, avec un cercle de rayon réel. « Tous » montre les autres positions fraîches. Les versions récentes prises en charge disposent du fond de rues réel ; les anciennes versions non couvertes restent en vue relative, sans terrain inventé. Voir [CARTE.md](CARTE.md) pour la projection et les conditions d’un fond géographique calibré. Aucune coordonnée d’objectif n’est déduite de son seul identifiant.
 
 ## Audit des achats
@@ -47,6 +49,20 @@ Le moteur reconstruit les inventaires détenus **avant** un achat ou moment. Il 
 Une réponse équipée par le joueur ou un allié est montrée. « Aucune réponse équipée relevée » exige les inventaires connus et reconnus des six alliés. Les inventaires incomplets restent inconnus. Les suggestions sont limitées à deux par famille ; les acteurs impliqués dans les moments détectés sont prioritaires. Les objets non modélisés empêchent une comparaison de coût complète.
 
 Les prix et effets sont ceux du catalogue versionné local. Le coût d’achat crédite les composants détenus et se compare à l’achat observé. Le patrimoine ne devient jamais du cash disponible : aucune alternative n’est déclarée achetable à cet instant, aucun montant de dégâts évités ni résultat de duel n’est prédit. Les différences de version sont signalées. Le raccourci vers le laboratoire permet d’étudier l’inventaire effectivement observé.
+
+## Rejouer un achat
+
+Le chapitre Build contient un écran supplémentaire **Et si j’avais choisi…**, accessible depuis **Rejouer un achat**, une option de l’audit ou la progression des pages. Il reste utilisable sans adaptation automatique détectée, à condition de disposer d’achats détaillés. Trois vues sans défilement partagent la même décision : **Comparaison**, **Échange**, **Inventaire**.
+
+Le moteur `src/domain/decisions.ts` reconstruit l’inventaire strictement avant l’horodatage de l’achat, y compris à `t=0`. A applique l’achat observé, B applique l’alternative au même inventaire. Chaque branche crédite et remplace ses composants indépendamment. Les achats futurs n’entrent pas dans cet état. Plusieurs achats simultanés, une vente indépendante au même instant, une variante non couverte ou un inventaire incomplet bloquent la projection au lieu de supposer une séquence. La fin de détention d’un composant exactement au moment de son amélioration est reconnue comme remplacement ; la branche B conserve ce composant si elle ne le remplace pas. Les recommandations d’une décision ultérieure ne modifient pas le classement des candidats d’un achat antérieur.
+
+Les dépenses sont calculées avec le catalogue local et son rapport à la version de la partie reste visible. Le coût peut dépasser l’achat observé ; il n’est jamais assimilé à une alternative réellement finançable ni à un gain de résultat. La limite connue de quatre objets actifs bloque le transfert d’une proposition qui la dépasserait. Les autres emplacements et leurs déblocages ne sont pas reconstruits.
+
+Pour les quatre héros dont l’arme est modélisée, les barres comparent les dégâts de tirs sur une durée réglable, le DPS avec rechargements, les PV du héros au niveau de base avec les objets, et le Spirit des objets. Les courbes en escalier et leurs fenêtres de recharge partagent exactement `firingSequence` avec `evaluate` : même cadence, même chargeur, même durée de recharge, exclusion du tir à la borne finale. Les effets conditionnels et actifs exclus de la courbe sont consultables sur les cartes, sans être convertis en dégâts fictifs. Pour les autres héros, seuls les coûts et les contributions explicites des objets sont comparés ; aucune arme d’un autre héros n’est utilisée.
+
+La précision initiale provient du dernier relevé de tirs strictement antérieur à l’achat, après rejet des resets et compteurs invalides. C’est un taux cumulé contre toutes les cibles, pas une mesure de précision contre les héros. Sans relevé, la valeur est un réglage manuel affiché, initialisé à 100 %. Durée, précision et résistance cible peuvent être ajustées. Le transfert au laboratoire conserve l’inventaire avant l’achat, A et B et ces mêmes réglages ; il ne réapplique pas la précision finale ou agrégée du profil. Le build précédent est conservé en référence, comme pour l’étude d’un inventaire observé.
+
+Le module d’achat et la review sont chargés à la demande pour alléger le lancement du laboratoire.
 
 ## Vue d’ensemble
 

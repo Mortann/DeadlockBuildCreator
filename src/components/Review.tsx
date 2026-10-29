@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useRef, useState } from 'react'
+import { lazy, Suspense, useEffect, useMemo, useRef, useState } from 'react'
 import {
   ArrowLeft,
   ArrowRight,
@@ -51,10 +51,14 @@ import { HeroPortrait, ItemArt, clock, number, shortNumber } from './GameUI'
 import { MatchChart } from './MatchChart'
 import { TacticalMap, type TacticalArrow } from './TacticalMap'
 import { AdvantageChart } from './AdvantageChart'
+import { purchaseDecisions, type DecisionPreference, type ReplayDraft } from '../domain/decisions'
 import './ReviewChapters.css'
 import './ReviewTheater.css'
 
 const EMPTY: Match[] = []
+const DecisionWorkbench = lazy(() =>
+  import('./DecisionWorkbench').then((module) => ({ default: module.DecisionWorkbench })),
+)
 const chapters = [
   { name: 'Bilan', icon: Target, stage: 1 },
   { name: 'Moments clés', icon: MapPin, stage: 2 },
@@ -536,8 +540,10 @@ function BuildAudit({
   onAt,
   onStudy,
   activeCaseId,
+  onReplay,
 }: {
   activeCaseId?: string
+  onReplay: (time: number, alternative?: string) => void
   match: Match
   cases: BuildCase[]
   at: number
@@ -578,6 +584,13 @@ function BuildAudit({
             <h3>{selected.title}</h3>
             <span className="chart-time">{clock(selected.time)}</span>
             <span className="proof signal">Option à comparer</span>
+            <button
+              className="text-button audit-replay-launch"
+              onClick={() => onReplay(selected.time)}
+            >
+              <ArrowUpRight size={14} />
+              Rejouer un achat
+            </button>
           </div>
           <div className="audit-context">
             <HeroPortrait
@@ -618,7 +631,13 @@ function BuildAudit({
             )}
             <div className="candidate-options">
               {selected.options.map((option) => (
-                <div className="candidate-choice" key={option.itemId}>
+                <button
+                  type="button"
+                  className="candidate-choice"
+                  key={option.itemId}
+                  aria-label={`Comparer ${itemById.get(option.itemId)?.name} à mon achat`}
+                  onClick={() => onReplay(selected.time, option.itemId)}
+                >
                   <ItemStrip ids={[option.itemId]} />
                   <strong>{itemById.get(option.itemId)?.name}</strong>
                   <span className="candidate-effect">
@@ -644,7 +663,10 @@ function BuildAudit({
                       </small>
                     )}
                   </span>
-                </div>
+                  <span className="candidate-compare-link">
+                    Comparer <ArrowUpRight size={12} />
+                  </span>
+                </button>
               ))}
             </div>
           </div>
@@ -664,6 +686,9 @@ function BuildAudit({
           <Shield />
           <strong>Aucune adaptation étayée</strong>
           <span>Achats adverses et compteurs de combat nécessaires.</span>
+          <button className="button" onClick={() => onReplay(at)}>
+            Rejouer mes achats <ArrowUpRight size={14} />
+          </button>
         </div>
       )}
       <section className="stat-panel inventory-panel">
@@ -784,7 +809,7 @@ export function Review({
   onConnect: () => void
   onImport: (p: Profile) => void
   onBack: () => void
-  onStudy: (m: Match, time: number) => void
+  onStudy: (m: Match, time: number, draft?: ReplayDraft) => void
 }) {
   const [selectedId, setSelectedId] = useState<string | null>(null),
     [slideId, setSlideId] = useState('bilan'),
@@ -795,6 +820,7 @@ export function Review({
     [listPage, setListPage] = useState(0),
     [pageSize, setPageSize] = useState(8),
     [at, setAt] = useState(600)
+  const [replayAlternative, setReplayAlternative] = useState<DecisionPreference | undefined>()
   const [error, setError] = useState(''),
     [busyId, setBusyId] = useState<string | null>(null)
   const [detailError, setDetailError] = useState<ApiError | null>(null)
@@ -991,6 +1017,7 @@ export function Review({
     setSlideId('bilan')
     setDirection(1)
     setAt(Math.min(600, m.duration))
+    setReplayAlternative(undefined)
   }
   const chapterSlides = slides.filter((s) => s.chapter === chapter),
     withinChapter = chapterSlides.indexOf(slide)
@@ -1323,7 +1350,35 @@ export function Review({
                   at={atTime}
                   onAt={setAt}
                   onStudy={onStudy}
+                  onReplay={(time, alternative) => {
+                    const nextPurchase = purchaseDecisions(selected).find((d) => d.time >= time)
+                    setAt(nextPurchase?.time ?? time)
+                    setReplayAlternative(
+                      alternative ? { itemId: alternative, knownAt: time } : undefined,
+                    )
+                    navigate('purchases')
+                  }}
                 />
+              )}
+              {slide.kind === 'purchases' && (
+                <Suspense
+                  fallback={
+                    <div className="chapter-loading">
+                      <LoaderCircle className="spin" />
+                      <span>Ouverture de l’atelier</span>
+                    </div>
+                  }
+                >
+                  <DecisionWorkbench
+                    key={`${selected.id}:${atTime}:${replayAlternative?.itemId ?? ''}:${replayAlternative?.knownAt ?? ''}`}
+                    match={selected}
+                    cases={analysis.build ?? []}
+                    at={atTime}
+                    preferred={replayAlternative}
+                    onStudy={onStudy}
+                    onBack={() => navigate(slides.find((s) => s.kind === 'build')!.id)}
+                  />
+                </Suspense>
               )}
               {slide.kind === 'economy' && analysis.advantage && (
                 <div className="theater-charts">

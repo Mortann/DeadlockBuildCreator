@@ -3155,3 +3155,12 @@ main {
 .economy-comparison {
   margin-top: 18px;
 }
+.review-open-loading {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 12px;
+  min-height: 40vh;
+  color: #a9b991;
+  font-size: 13px;
+}

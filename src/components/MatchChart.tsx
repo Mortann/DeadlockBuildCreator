@@ -2,6 +2,7 @@ import { Crosshair, Skull } from 'lucide-react'
 import type { Match, StatPoint } from '../domain/types'
 import { heroes, itemByApiId } from '../domain/catalogue'
 import { ItemArt, clock, shortNumber } from './GameUI'
+import { shopPurchases } from '../domain/purchaseRows'
 
 export function MatchChart({
   match,
@@ -175,7 +176,7 @@ export function MatchChart({
         <span className="event-label">
           <Crosshair size={14} />
         </span>
-        {match.purchases.map((p, i) => {
+        {shopPurchases(match.purchases).map((p, i) => {
           const item = itemByApiId.get(p.itemId)
           return (
             <button

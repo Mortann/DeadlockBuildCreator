@@ -94,13 +94,13 @@ test('all review pages fit desktop and mobile without scrolling or hidden contro
   await expect(page.locator('.chapter-ready')).toHaveCount(4)
   await page.emulateMedia({ reducedMotion: 'reduce' })
   for (const [width, height] of [
+    [640, 480],
     [1366, 768],
     [390, 844],
-    [640, 480],
   ]) {
     await page.setViewportSize({ width, height })
     await chapter(page, 'Bilan').click()
-    for (let step = 0; step < 7; step++) {
+    for (let step = 0; step < 8; step++) {
       const result = await page.locator('.review-stage').evaluate((stage) => {
         const slide = stage.querySelector('.review-slide')!,
           frame = stage.getBoundingClientRect()
@@ -124,7 +124,7 @@ test('all review pages fit desktop and mobile without scrolling or hidden contro
       expect(result.outside, `${width}×${height} page${step + 1}`).toEqual([])
       expect(result.nested, `${width}×${height} page${step + 1}`).toEqual([])
       expect(result.overflow, `${width}×${height} page${step + 1}`).toBeLessThanOrEqual(4)
-      if (step < 6) await page.getByRole('button', { name: 'Suivant', exact: true }).click()
+      if (step < 7) await page.getByRole('button', { name: 'Suivant', exact: true }).click()
     }
   }
   await page.getByRole('button', { name: 'Terminer', exact: true }).click()

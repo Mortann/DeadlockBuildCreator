@@ -1,6 +1,7 @@
 import { itemByApiId, itemById, source } from './catalogue'
 import { inventoryAt, purchase } from './engine'
 import { interpolate, median, personalModel } from './player'
+import { shopPurchases, hasUnsupportedItemUpgrade } from './purchaseRows'
 import type {
   CombatSeries,
   Item,
@@ -326,7 +327,7 @@ export function reviewOverview(match: Match, history: Match[]): ReviewOverview {
         key: 'inventory',
         label: 'Achats',
         available: match.inventoryRecorded === true,
-        count: match.purchases.length,
+        count: shopPurchases(match.purchases).length,
       },
       {
         key: 'deaths',
@@ -767,7 +768,7 @@ function makeOptions(
   condition: string,
   actualPurchase?: BuildCase['actualPurchase'],
 ): BuildCase['options'] {
-  const owned = inventoryAt(match, Math.max(0, time - 0.001))
+  const owned = inventoryAt(match, time - 0.001)
   if (owned.unknown) return []
   return candidates
     .flatMap((id) => {
@@ -803,14 +804,18 @@ export function reviewBuild(match: Match, moments: ReviewMoment[]): BuildCase[] 
     seen = new Set<string>()
   const times = [
     ...new Set([
-      ...match.purchases.filter((p) => !p.upgradeInfo).map((p) => p.time),
+      ...shopPurchases(match.purchases)
+        .filter((p) => !hasUnsupportedItemUpgrade(p))
+        .map((p) => p.time),
       ...moments.map((m) => m.time),
     ]),
   ].sort((a, b) => a - b)
   for (const time of times) {
-    const owned = inventoryAt(match, Math.max(0, time - 0.001))
+    const owned = inventoryAt(match, time - 0.001)
     if (owned.unknown) continue
-    const bought = match.purchases.find((p) => p.time === time && !p.upgradeInfo),
+    const bought = shopPurchases(match.purchases).find(
+        (p) => p.time === time && !hasUnsupportedItemUpgrade(p),
+      ),
       actualItem = bought && itemByApiId.get(bought.itemId)
     const actualPurchase = actualItem
       ? { itemId: actualItem.id, cost: purchase(actualItem, owned.items).cost, time }
@@ -823,7 +828,7 @@ export function reviewBuild(match: Match, moments: ReviewMoment[]): BuildCase[] 
           : 'different'
     for (const peer of match.peers) {
       if (match.team === undefined || peer.team === undefined || peer.team === match.team) continue
-      const inv = inventoryForPeer(match, peer, Math.max(0, time - 0.001)),
+      const inv = inventoryForPeer(match, peer, time - 0.001),
         recent = [...peer.stats].reverse().find((s) => s.time <= time && time - s.time <= 60)
       let healing: { value: number; start: number; end: number } | null = null
       if (recent)
@@ -836,7 +841,7 @@ export function reviewBuild(match: Match, moments: ReviewMoment[]): BuildCase[] 
       const sustainItems = inv?.items.filter((i) => SUSTAIN.has(i.id)) ?? []
       const healingKey = `healing-${peer.accountId}`
       if (!seen.has(healingKey) && ((healing?.value ?? 0) >= 250 || sustainItems.length > 0)) {
-        const response = responseStatus(match, Math.max(0, time - 0.001), ANTI_HEAL),
+        const response = responseStatus(match, time - 0.001, ANTI_HEAL),
           options = makeOptions(
             match,
             time,
@@ -874,7 +879,7 @@ export function reviewBuild(match: Match, moments: ReviewMoment[]): BuildCase[] 
       if (controls.length && !seen.has(controlKey)) {
         const response = responseStatus(
           match,
-          Math.max(0, time - 0.001),
+          time - 0.001,
           new Set([
             'upgrade_debuff_reducer',
             'upgrade_unstoppable',
@@ -921,7 +926,7 @@ export function reviewBuild(match: Match, moments: ReviewMoment[]): BuildCase[] 
     if (seen.has(key)) continue
     const peer = match.peers.find((p) => p.accountId === dominant.accountId)!
     const time = moment.time
-    const inv = inventoryForPeer(match, peer, Math.max(0, time - 0.001))
+    const inv = inventoryForPeer(match, peer, time - 0.001)
     cases.push({
       id: key,
       kind: 'pressure',
@@ -1024,6 +1029,7 @@ export type ScenePlayer = {
   x: number
   y: number
   observedAt: number
+  health?: number
 }
 /** No future trajectories or death locations are borrowed to populate an earlier frame. */
 export function actorPositionAt(
@@ -1075,6 +1081,7 @@ export function sceneAt(match: Match, time: number) {
         x: p.x,
         y: p.y,
         observedAt: p.time,
+        health: p.health,
       })
   }
   const exactDeath = match.deathDetails?.find(

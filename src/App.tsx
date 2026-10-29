@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useRef, useState } from 'react'
+import { lazy, Suspense, useEffect, useMemo, useRef, useState } from 'react'
 import {
   Activity,
   ArrowDown,
@@ -64,7 +64,6 @@ import {
 import type { Build, BuildEntry, Category, Item, Phase, Profile, Scenario } from './domain/types'
 import { metricLabels, PowerChart, type Metric } from './components/PowerChart'
 import { PlayerDialog } from './components/PlayerDialog'
-import { Review } from './components/Review'
 import {
   HeroPortrait,
   ItemArt,
@@ -80,6 +79,9 @@ import {
 import presentation from './data/itemPresentation.json'
 
 const STORAGE = 'deadlock.atelier.'
+const Review = lazy(() =>
+  import('./components/Review').then((module) => ({ default: module.Review })),
+)
 function readBuild(key: string): Build | null {
   try {
     const b = validateBuild(JSON.parse(localStorage.getItem(STORAGE + key) ?? 'null'))
@@ -466,30 +468,49 @@ export default function App() {
           </div>
         )}
         {page === 'review' ? (
-          <Review
-            profile={profile}
-            onConnect={() => setPlayerOpen(true)}
-            onImport={acceptProfile}
-            onBack={() => setPage('lab')}
-            onStudy={(match, at) => {
-              const inventory = inventoryAt(match, at)
-              setReference(build)
-              setBuild({
-                name: `Inventaire #${match.id} · ${clock(at)}`,
-                heroId: match.heroId,
-                entries: inventory.items.map((item) => ({
-                  id: crypto.randomUUID(),
-                  itemId: item.id,
-                  phase: 'lane',
-                  situational: false,
-                  note: '',
-                })),
-              })
-              setPage('lab')
-              setSelected(999)
-              setToast('Inventaire chargé · règles actuelles')
-            }}
-          />
+          <Suspense
+            fallback={
+              <div className="review-open-loading" role="status">
+                <Activity size={20} />
+                <span>Ouverture des parties</span>
+              </div>
+            }
+          >
+            <Review
+              profile={profile}
+              onConnect={() => setPlayerOpen(true)}
+              onImport={acceptProfile}
+              onBack={() => setPage('lab')}
+              onStudy={(match, at, draft) => {
+                const inventory = draft ? { items: draft.items } : inventoryAt(match, at)
+                setReference(build)
+                setBuild({
+                  name: `${draft ? 'Décision' : 'Inventaire'} #${match.id} · ${clock(at)}`,
+                  heroId: match.heroId,
+                  entries: inventory.items.map((item) => ({
+                    id: crypto.randomUUID(),
+                    itemId: item.id,
+                    phase: 'lane',
+                    situational: false,
+                    note: '',
+                  })),
+                })
+                setPage('lab')
+                if (draft) {
+                  setOptionA(draft.actualItemId)
+                  setOptionB(draft.alternativeItemId)
+                  setTab('compare')
+                  setManualAccuracy(draft.scenario.accuracy * 100)
+                  setPersonalAccuracy(false)
+                  setResistance(draft.scenario.resistance * 100)
+                  setDuration(draft.scenario.duration)
+                  setSpiritApplied(draft.scenario.spiritApplied)
+                }
+                setSelected(999)
+                setToast('Inventaire chargé · règles actuelles')
+              }}
+            />
+          </Suspense>
         ) : (
           <>
             <div className="build-heading">
@@ -1062,7 +1083,7 @@ export default function App() {
                     <input
                       aria-label="Précision des tirs"
                       type="range"
-                      min="10"
+                      min="0"
                       max="100"
                       value={Math.round(scenario.accuracy * 100)}
                       disabled={personalAccuracy && personal.accuracy !== null}
@@ -1077,9 +1098,9 @@ export default function App() {
                     <input
                       aria-label="Résistance balle de la cible"
                       type="range"
-                      min="0"
-                      max="70"
-                      step="5"
+                      min="-50"
+                      max="90"
+                      step="1"
                       value={resistance}
                       onChange={(e) => setResistance(Number(e.target.value))}
                     />
@@ -1092,6 +1113,9 @@ export default function App() {
                         value={duration}
                         onChange={(e) => setDuration(Number(e.target.value))}
                       >
+                        {![3, 10, 20].includes(duration) && (
+                          <option value={duration}>{duration} s</option>
+                        )}
                         <option value="3">3 s</option>
                         <option value="10">10 s</option>
                         <option value="20">20 s</option>

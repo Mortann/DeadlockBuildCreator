@@ -4,7 +4,7 @@
 
 Contrairement à la recherche initiale, l’accès à `api.deadlock-api.com` et au site principal fonctionne depuis cet environnement lors de cette vérification. Le schéma public hébergé a été comparé à celui du dépôt GitHub. Un compte transmis par l’utilisateur a été testé directement dans le navigateur avec le serveur de production : 332 lignes d’historique reçues et affichées, aucun héros non identifié, profil Steam et statistiques par héros présents. Les données de ce compte restent hors des sources et des archives distribuées.
 
-La partie fournie en capture était effectivement récupérable depuis le cache de métadonnées. Elle fournit 12 joueurs, 40 achats pour le joueur, 2 696 relevés de position et 23 événements d’objectif. La review lit ces données sans avertissement de normalisation. Cela ne prouve pas que la base contient toutes les parties jouées sur ce compte.
+La partie fournie en capture était effectivement récupérable depuis le cache de métadonnées. Elle fournit 12 joueurs, 40 lignes d’acquisition pour le joueur (24 achats et 16 déblocages/améliorations de capacités), 2 696 relevés de position et 23 événements d’objectif. La review lit ces données sans avertissement de normalisation. Cela ne prouve pas que la base contient toutes les parties jouées sur ce compte.
 
 ## Origines des informations manquantes
 
@@ -16,6 +16,7 @@ Complément : la vérification suivante a confirmé que l’historique du compte
 4. **Relevés économiques espacés de plusieurs minutes.** Le plafond arbitraire de 120 secondes laissait de nombreux trous dans la courbe collective. Il suit désormais la cadence médiane des séries comportant au moins trois points, avec un maximum de 600 secondes et sans extrapolation. Les grands trous isolés restent vides.
 5. **Erreur d’une référence historique affichée pour la partie ouverte.** Les échecs de références sont séparés. Un 404 n’empêche plus d’essayer les autres références. Une limite 429 arrête les demandes restantes ; seules les références réellement chargées sont intégrées.
 6. **Cache seul pour les détails.** La lecture ordinaire reste rapide et sans rattrapage Steam automatique. Un 404 propose maintenant une récupération Steam explicite, avec quota et erreurs exploitables, au lieu d’imposer un import JSON.
+7. **État ordinaire des objets pris à tort pour une variante.** Une vérification ultérieure du calcul a révélé que `upgrade_info=65536` est l’état normal `TRAINED`, et que `items` contient aussi les niveaux des quatre capacités. La première validation des compteurs et de l’affichage des héros n’avait pas vérifié cette reconstruction. Le moteur distingue désormais les capacités connues et les achats, accepte les objets ordinaires et préserve les vraies variantes inconnues. Sur la partie Seven examinée, il reconstruit 5 objets reconnus à dix minutes, 12 en fin de partie, aucun objet inconnu à ces instants et deux cas d’adaptation. Les profils sauvegardés bénéficient de la correction sans réimport ; les parties réellement absentes du fournisseur restent un problème distinct. Voir [TELEMETRIE.md](../TELEMETRIE.md).
 
 ## Services comparés
 

@@ -1,5 +1,6 @@
 import { catalogue, itemById, itemByApiId, phases } from './catalogue'
 import { projectedTime } from './player'
+import { hasUnsupportedItemUpgrade, isAbilityRow } from './purchaseRows'
 import type { Build, BuildEntry, Hero, Item, Match, PersonalModel, Scenario } from './types'
 
 export const modelLimitations =
@@ -57,6 +58,37 @@ export type WeaponResult = {
   cadence: number
   unsupported: number
 }
+/** Shared finite firing sequence; a shot exactly at the end is excluded. */
+export function firingSequence(
+  weapon: Pick<WeaponResult, 'damage' | 'cadence' | 'clip' | 'reload'>,
+  requestedDuration: number,
+) {
+  const duration = Math.max(0, Math.min(60, requestedDuration))
+  const shots: { time: number; damage: number }[] = []
+  const reloads: { start: number; end: number }[] = []
+  if (
+    ![duration, weapon.damage, weapon.cadence, weapon.clip, weapon.reload].every(Number.isFinite) ||
+    weapon.cadence <= 0 ||
+    weapon.clip < 1 ||
+    weapon.reload < 0
+  )
+    return { shots, reloads }
+  let t = 0,
+    inClip = 0
+  while (t < duration && shots.length < 10000) {
+    shots.push({ time: t, damage: weapon.damage * (shots.length + 1) })
+    inClip++
+    if (inClip === weapon.clip) {
+      const start = t + 1 / weapon.cadence,
+        end = start + weapon.reload
+      if (start < duration && weapon.reload > 0)
+        reloads.push({ start, end: Math.min(duration, end) })
+      t = end
+      inClip = 0
+    } else t += 1 / weapon.cadence
+  }
+  return { shots, reloads }
+}
 export function evaluate(hero: Hero, items: Item[], scenario: Scenario): WeaponResult {
   const sum = (key: string) => items.reduce((n, i) => n + (i.properties[key] ?? 0), 0)
   const accuracy = Math.max(0, Math.min(1, scenario.accuracy))
@@ -77,19 +109,7 @@ export function evaluate(hero: Hero, items: Item[], scenario: Scenario): WeaponR
   )
   const reload = hero.weapon.m_reloadDuration
   const sustained = (damage * clip) / (clip / cadence + reload)
-  // A bounded sequence of individual shots and reloads; handles short windows.
-  let t = 0,
-    shots = 0,
-    inClip = 0
-  const duration = Math.max(0, Math.min(60, scenario.duration))
-  while (t < duration && shots < 10000) {
-    shots++
-    inClip++
-    if (inClip === clip) {
-      t += reload + 1 / cadence
-      inClip = 0
-    } else t += 1 / cadence
-  }
+  const sequence = firingSequence({ damage, cadence, clip, reload }, scenario.duration)
   const support = new Set([
     'BaseAttackDamagePercent',
     'BonusFireRate',
@@ -101,7 +121,7 @@ export function evaluate(hero: Hero, items: Item[], scenario: Scenario): WeaponR
   return {
     damage,
     sustained,
-    burst: damage * shots,
+    burst: sequence.shots.at(-1)?.damage ?? 0,
     health: Math.max(
       1,
       (hero.health + sum('BonusHealth')) * (1 + sum('MaxHealthLossPercent') / 100),
@@ -253,6 +273,7 @@ export function inventoryAt(match: Match, time: number): { items: Item[]; unknow
   let owned: Item[] = []
   const unknown = new Set<string>()
   const events = match.purchases
+    .filter((p) => !isAbilityRow(p))
     .flatMap((p) => [
       { time: p.time, sold: false, purchase: p },
       ...(p.soldTime !== undefined ? [{ time: p.soldTime, sold: true, purchase: p }] : []),
@@ -265,7 +286,7 @@ export function inventoryAt(match: Match, time: number): { items: Item[]; unknow
     if (event.sold) {
       unknown.delete(p.itemId)
       if (item) owned = owned.filter((i) => i.id !== item.id)
-    } else if (!item || p.upgradeInfo) {
+    } else if (!item || hasUnsupportedItemUpgrade(p)) {
       unknown.add(p.itemId)
       if (item) owned = owned.filter((i) => i.id !== item.id)
     } else {
@@ -285,7 +306,14 @@ export function personalCore(matches: Match[], heroId: number): BuildEntry[] {
     const counted = new Set<string>()
     for (const p of match.purchases) {
       const item = itemByApiId.get(p.itemId)
-      if (!item || p.upgradeInfo || counted.has(item.id) || p.time > match.duration) continue
+      if (
+        !item ||
+        isAbilityRow(p) ||
+        hasUnsupportedItemUpgrade(p) ||
+        counted.has(item.id) ||
+        p.time > match.duration
+      )
+        continue
       counted.add(item.id)
       const phase = p.time < 480 ? 'lane' : p.time < 1200 ? 'mid' : 'late'
       const key = `${phase}:${item.id}`,

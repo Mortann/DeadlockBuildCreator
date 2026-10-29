@@ -21,6 +21,7 @@ export type TacticalPlayer = MapPoint & {
   heroId?: number
   team?: number
   observedAt: number
+  health?: number
 }
 export type TacticalArrow = {
   from: MapPoint
@@ -363,7 +364,7 @@ export function TacticalMap({
                   }
                   tabIndex={0}
                   role="button"
-                  aria-label={`${labelOf(p)} · relevé à ${clock(p.observedAt)}`}
+                  aria-label={`${labelOf(p)} · relevé à ${clock(p.observedAt)}${p.health !== undefined && p.health >= 0 && p.health <= 100 ? ` · PV ${p.health} %` : ''}`}
                   onClick={() => setFocusedId(p.id)}
                   onFocus={() => setFocusedId(p.id)}
                   onKeyDown={(e) => {
@@ -391,6 +392,25 @@ export function TacticalMap({
                     </text>
                   )}
                   <circle className="player-border" r="18" />
+                  {p.health !== undefined &&
+                    Number.isFinite(p.health) &&
+                    p.health >= 0 &&
+                    p.health <= 100 && (
+                      <g
+                        className={`map-health ${p.health <= 25 ? 'critical' : p.health <= 50 ? 'low' : ''}`}
+                        aria-hidden="true"
+                      >
+                        <rect x={-19} y={23} width={38} height={5} rx={1} />
+                        <rect
+                          className="map-health-value"
+                          x={-18}
+                          y={24}
+                          width={(36 * p.health) / 100}
+                          height={3}
+                          rx={0.5}
+                        />
+                      </g>
+                    )}
                   <title>
                     {labelOf(p)} · {clock(p.observedAt)}
                   </title>
@@ -457,7 +477,13 @@ export function TacticalMap({
           {chosen ? (
             <>
               <Target size={12} />
-              {chosen.id === selfId ? 'Vous' : chosen.label}
+              {labelOf(chosen)}
+              {chosen.health !== undefined &&
+                Number.isFinite(chosen.health) &&
+                chosen.health >= 0 &&
+                chosen.health <= 100 && (
+                  <span className="map-selected-health">♥ {chosen.health}%</span>
+                )}
               <small>−{Math.max(0, Math.round(time - chosen.observedAt))} s</small>
             </>
           ) : null}

@@ -2225,3 +2225,52 @@ main:has(> .match-library) {
     min-height: 18px;
   }
 }
+.review-theater .audit-replay-launch {
+  margin-left: auto;
+  color: #c8d8ad;
+  font-size: 10px;
+  white-space: nowrap;
+}
+.review-theater button.candidate-choice {
+  color: inherit;
+  font: inherit;
+  text-align: center;
+  background: #202a1b;
+  cursor: pointer;
+  border: 1px solid #a7be793b;
+}
+.review-theater button.candidate-choice:hover {
+  border-color: #c9dca6;
+  background: #2b371f;
+}
+.candidate-compare-link {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
+  font-size: 9px;
+  color: #bfd599;
+}
+@media (max-width: 760px) {
+  .review-theater .audit-replay-launch {
+    font-size: 8px;
+    margin-left: 0;
+  }
+  .review-theater .audit-replay-launch svg {
+    width: 10px;
+  }
+  .candidate-compare-link {
+    font-size: 8px;
+  }
+}
+@media (max-width: 760px) and (max-height: 650px) {
+  .review-theater .audit-replay-launch {
+    font-size: 0;
+  }
+  .review-theater .audit-replay-launch svg {
+    width: 14px;
+  }
+  .review-theater .candidate-compare-link {
+    display: none;
+  }
+}

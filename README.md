@@ -14,6 +14,7 @@ Première version fonctionnelle :
 - Courbes exploratoires de l’arme, des PV et de la puissance Spirit, par budget ou temps indicatif.
 - Historique via l’API communautaire ou import JSON. Économie et précision du héros choisi alimentent réellement les calculs lorsqu’elles sont disponibles.
 - Historique paginé et review plein écran sans défilement : bilan personnel, une page par moment et adaptation, puis courbes et bilan des équipes. Carte du jeu centrale sur les versions récentes prises en charge, lecture des scènes, navigation clavier et transitions. Calcul en arrière-plan et retour de l’inventaire observé vers le laboratoire. Les règles et limites sont documentées dans [docs/REVIEW.md](docs/REVIEW.md).
+- **Rejouer un achat** dans la review : choisir un achat, comparer une alternative depuis le même inventaire antérieur, voir les coûts avec crédit de composants, les compromis de statistiques et les courbes de tirs/rechargements. Les réglages et le couple d’objets peuvent être envoyés dans le laboratoire. Les héros hors modèle conservent la comparaison des coûts et des propriétés, sans courbe d’arme empruntée à un autre héros.
 
 Sous Windows, le plus simple est de télécharger [Installer-Deadlock.cmd](https://raw.githubusercontent.com/Mortann/DeadlockBuildCreator/codex/deadlock-build-lab/Installer-Deadlock.cmd), puis de faire un double-clic. Node.js 24 ou plus récent est nécessaire (le fichier ouvre le site officiel s’il manque). Git n’est pas nécessaire.
 
@@ -66,6 +67,7 @@ Les données client sont extraites du commit SteamDatabase `d251cf9d9a796061c90f
 
 ```sh
 python scripts/sync_snapshot.py --source-dir /chemin/vers/fichiers
+python scripts/sync_ability_identities.py --source-dir /chemin/vers/fichiers
 ```
 
 Le dossier doit contenir `abilities.vdata` et `heroes.vdata`. Le snapshot conserve les empreintes des sources. Les identifiants d’objets sont calculés avec MurmurHash2, seed `0x31415926`, comme dans le parseur communautaire. Les coûts sont les prix totaux de palier ; les composants déjà détenus sont remplacés et crédités dans le modèle d’achat.

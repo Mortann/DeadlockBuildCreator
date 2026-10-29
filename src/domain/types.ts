@@ -79,6 +79,7 @@ export type StatPoint = {
   teammateHealing?: number
   teammateBarriering?: number
 }
+/** Raw acquisition rows include signature ability upgrades; use shopPurchases for shop-only views. */
 export type Purchase = { itemId: string; time: number; soldTime?: number; upgradeInfo?: number }
 export type WorldPosition = { x: number; y: number; z?: number }
 /** Raw observed samples in world units. No interpolation or forward fill. */

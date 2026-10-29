@@ -11,6 +11,7 @@ import type {
   ObjectiveEvent,
   CombatSeries,
 } from './types'
+import { shopPurchases } from './purchaseRows'
 
 type Dict = Record<string, unknown>
 type Warn = (code: string) => void
@@ -905,7 +906,7 @@ export function analyseMatch(match: Match, allMatches: Match[]): Finding[] {
   findings.push({
     title: 'Couverture de cette analyse',
     kind: 'coverage',
-    observation: `${match.stats.length} relevés économiques · ${match.purchases.length} achats · ${match.deathTimes.length} morts horodatées.`,
+    observation: `${match.stats.length} relevés économiques · ${shopPurchases(match.purchases).length} achats · ${match.deathTimes.length} morts horodatées.`,
     interpretation: match.stats.length
       ? 'Premiers constats descriptifs. Le diagnostic des contre-objets et les alternatives de combat attendent un modèle de capacités et de dégâts validé.'
       : 'Cet historique résumé ne contient pas la chronologie nécessaire pour diagnostiquer les décisions. Enrichissez la partie avec ses métadonnées.',

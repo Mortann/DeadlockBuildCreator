@@ -2,7 +2,7 @@ import type { BuildCase, ReviewMoment } from './review'
 export type ReviewSlide = {
   id: string
   chapter: 0 | 1 | 2 | 3
-  kind: 'bilan' | 'moment' | 'build' | 'economy' | 'teams'
+  kind: 'bilan' | 'moment' | 'build' | 'purchases' | 'economy' | 'teams'
   momentId?: string
   caseId?: string
 }
@@ -28,6 +28,7 @@ export function reviewSlides(
           caseId: c.id,
         }))
       : [{ id: 'build:empty', chapter: 2 as const, kind: 'build' as const }]),
+    { id: 'purchases', chapter: 2, kind: 'purchases' },
     { id: 'economy', chapter: 3, kind: 'economy' },
     { id: 'teams', chapter: 3, kind: 'teams' },
   ]
